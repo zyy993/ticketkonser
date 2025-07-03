@@ -1,0 +1,37 @@
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Untuk input agar tumbuh sesuai dengan ruang yang ada */
+.navbar .relative {
+  flex-grow: 1; /* Membuat input pencarian tumbuh memanfaatkan ruang */
+}
+
+.navbar input {
+  margin-right: 1rem; /* Memberikan jarak antara input dan tombol */
+}
+
+.navbar .text-white {
+  transition: all 0.3s ease;
+}
+
+.navbar .text-white:hover {
+  background-color: #fff;
+  color: #00108B;
+}
+
+/* Media Query untuk mobile view */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column; /* Navbar akan menjadi kolom pada perangkat kecil */
+    align-items: flex-start; /* Rata kiri */
+  }
+
+  .navbar input {
+    margin-bottom: 10px; /* Memberikan jarak antara input dan tombol di perangkat kecil */
+  }
+}
