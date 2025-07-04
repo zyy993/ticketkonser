@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpMail;
 
 use App\Models\Chat;
+use App\Models\Horizon;
+use App\Models\TicketOrder;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,15 +40,14 @@ Route::get('/login', [AuthController::class, 'tampilLogin'])->name('login.tampil
 Route::post('/login/sub', [AuthController::class, 'submitLogin'])->name('submit.login');
 
 // Route untuk menampilkan halaman beranda (dengan card event)
-Route::get('/', [HomeController::class, 'tampilHome'])->middleware('auth')->name('home.tampil');
-
-
+Route::get('/home', [HomeController::class, 'tampilHome'])->middleware('auth')->name('home.tampil');
+Route::get('/', [HorizonController::class, 'tampillending'])->name('lending');
 
 
 
 Route::get('/riwayat-transaksi', [HomeController::class, 'tampilriwayat'])->name('riwayat.index');
 
-
+Route::get('/riwayat-transaksi1', [TicketOrderController::class, 'indext'])->name('riwayat.indext');
 
 
 
@@ -161,10 +162,6 @@ Route::post('/review1', [ReviewController::class, 'store'])->name('review.store'
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/review1', [ReviewController::class, 'index'])->name('user.review1');
 
-
-Route::get('/review3', function () {
-    return view('admin.review3');
-});
 Route::get('/notif', function () {
     return view('promotor.notif');
 });
@@ -338,10 +335,12 @@ Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('otp.send');
 Route::post('/register-with-otp', [OtpController::class, 'register'])->name('register.with.otp');
 Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('otp.verify');
 
+// Route untuk halaman admin review
+Route::get('/admin/review3', [ReviewController::class, 'indexw'])->name('admin.review3');
+// Route delete review
+Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('review.destroy');
 
 
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-})->name('logout');
 
+
+Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');

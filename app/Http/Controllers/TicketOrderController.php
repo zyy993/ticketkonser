@@ -81,7 +81,16 @@ public function showETicket($id)
 }
 
 
+public function indext()
+{
 
+    $user = Auth::user();
+    $contents = TicketOrder::where('user_id', $user->id)// relasi ke tabel users
+        ->where('status', 'accepted')
+        ->get();
+
+    return view('admin.riwayattransaksi', compact('contents'));
+}
 
 
 }

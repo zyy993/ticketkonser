@@ -23,6 +23,14 @@
                 src="{{ asset('img/logo.png') }}" width="32" />
             <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
         </div>
+        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
+            <div class="relative w-full">
+                <input
+                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+                    placeholder="Search by artist or event" type="text" />
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
+            </div>
+        </div>
         <div class="flex items-center space-x-3 min-w-[180px] justify-end">
             <button class="text-white text-xl sm:hidden">
                 <i class="fas fa-bars"></i>
@@ -34,40 +42,55 @@
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
                 <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                    <div class="ml-4">
-                        <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
+                     <a href="{{ route('user.editprofile') }}">
+               <img
+  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+  alt="User avatar"
+  class="w-10 h-10 rounded-full object-cover bg-white"
+/>
+                </a>
+                     <div class="ml-4">
+    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
     <br>
     <span class="text-white text-sm">{{ Auth::user()->email }}</span>
-                    </div>
+</div>
                     <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
 
                 <ul class="p-4 space-y-4 text-white ml-4">
-                   <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
+                     <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
+                    <li><a href="{{ route('admin.review3') }}" class="hover:underline">Review & Ratings</a></li>
 
                     <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
                    <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>
+                    <li>
 
-                        <div class="flex items-center">
-                            <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none"></button>
-                        </div>
                     </li>
                     <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
                 </ul>
+                        <div class="flex items-center">
+
+                            <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
+                            </button>
+                        </div>
+                    </li>
+                   @auth
+@endauth
+
+                </ul>
             </div>
         </div>
+            <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
+
     </nav>
+
+
             <!--popup-->
             <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
             <div class="flex items-center justify-center min-h-screen">
@@ -80,450 +103,116 @@
                 </div>
             </div>
             </div>
-    <script>
-        // JavaScript to toggle the visibility of Admin and Promotor options
-        document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-            const adminPromotorList = document.getElementById('adminPromotorList');
-            adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
-        });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const close = document.getElementById('closeSidebar');
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutConfirmation = document.getElementById('logoutConfirmation');
+        const logoutForm = document.getElementById('logoutForm');
+        const yesButton = logoutConfirmation?.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation?.querySelector('.bg-gray-400');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const close = document.getElementById('closeSidebar');
-            const logoutButton = document.getElementById('logoutButton');
-            const logoutConfirmation = document.getElementById('logoutConfirmation');
-            const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-            const noButton = logoutConfirmation.querySelector('.bg-gray-400');
-
+        // Sidebar toggle
+        if (toggle && sidebar) {
             toggle.addEventListener('click', () => {
                 sidebar.classList.remove('translate-x-full');
             });
+        }
 
+        if (close && sidebar) {
             close.addEventListener('click', () => {
                 sidebar.classList.add('translate-x-full');
             });
+        }
 
-            // Show logout confirmation popup
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                logoutConfirmation.classList.remove('hidden'); // Show popup
+        // Show logout confirmation popup
+        if (logoutButton && logoutConfirmation) {
+            logoutButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                logoutConfirmation.classList.remove('hidden');
             });
+        }
 
-            // Handle YES button click
-            yesButton.addEventListener('click', () => {
-                // Implement logout logic here
-                // For example, redirect to logout URL
-                window.location.href = '/logout'; // Change this to your logout URL
+        // YES = Submit logout form
+        if (yesButton && logoutForm) {
+            yesButton.addEventListener('click', function () {
+                logoutForm.submit();
             });
+        }
 
-            // Handle NO button click
-            noButton.addEventListener('click', () => {
-                logoutConfirmation.classList.add('hidden'); // Hide popup
+        // NO = Close popup
+        if (noButton && logoutConfirmation) {
+            noButton.addEventListener('click', function () {
+                logoutConfirmation.classList.add('hidden');
             });
+        }
 
-            // Optional: close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            });
+        // Close sidebar if click outside
+        document.addEventListener('click', function (e) {
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.add('translate-x-full');
+            }
         });
-    </script>
-    </nav>
-  <main class="max-w-5xl mx-auto p-4 sm:p-6 md:p-8">
-   <!-- Review & Rating Header -->
-   <section>
-    <h2 class="font-semibold text-base mb-4 select-none">
-     Review &amp; Rating
-    </h2>
-    <div class="border border-gray-300 rounded-md flex flex-col md:flex-row md:space-x-6 p-4 mb-8" style="min-height: 120px">
-     <!-- Review count -->
-     <div class="flex-1 border-r border-gray-300 pr-6 mb-4 md:mb-0">
-      <p class="font-semibold text-sm mb-1 select-none">
-       Review count
-      </p>
-      <p class="font-extrabold text-3xl leading-none select-text">
-       9.926
-      </p>
-      <p class="text-xs text-gray-500 mt-1 select-none">
-       Total review from 9.926 people from this 9th of 2nd of year
-      </p>
-     </div>
-     <!-- Average rating -->
-     <div class="flex-1 border-r border-gray-300 pr-6 mb-4 md:mb-0">
-      <p class="font-semibold text-sm mb-1 select-none">
-       Average rating
-      </p>
-      <div class="flex items-center space-x-2">
-       <p class="font-extrabold text-3xl leading-none select-text">
-        4,4
-       </p>
-       <div class="flex space-x-0.5">
-        <i class="fas fa-star star-yellow">
-        </i>
-        <i class="fas fa-star star-yellow">
-        </i>
-        <i class="fas fa-star star-yellow">
-        </i>
-        <i class="fas fa-star star-yellow">
-        </i>
-        <i class="fas fa-star-half-alt star-yellow">
-        </i>
-       </div>
-      </div>
-      <p class="text-xs text-gray-500 mt-1 select-none">
-       Based on 9.926 reviews
-      </p>
-     </div>
-     <!-- Rating distribution -->
-     <div class="flex-1">
-      <div class="flex items-center space-x-2 text-xs text-gray-600 mb-1 select-none">
-       <span class="w-10 flex items-center justify-end space-x-1 text-right">
-        <i class="fas fa-star star-yellow text-[10px]"></i>
-        <span>5</span>
-       </span>
-       <div class="h-3 rounded-full bg-purple-600" style="width: 58%">
-       </div>
-       <span class="w-12 text-right">
-        58,0%
-       </span>
-      </div>
-      <div class="flex items-center space-x-2 text-xs text-gray-600 mb-1 select-none">
-       <span class="w-10 flex items-center justify-end space-x-1 text-right">
-        <i class="fas fa-star star-yellow text-[10px]"></i>
-        <span>4</span>
-       </span>
-       <div class="h-3 rounded-full bg-purple-400" style="width: 31.7%">
-       </div>
-       <span class="w-12 text-right">
-        31,7%
-       </span>
-      </div>
-      <div class="flex items-center space-x-2 text-xs text-gray-600 mb-1 select-none">
-       <span class="w-10 flex items-center justify-end space-x-1 text-right">
-        <i class="fas fa-star star-yellow text-[10px]"></i>
-        <span>3</span>
-       </span>
-       <div class="h-3 rounded-full bg-purple-300" style="width: 10.3%">
-       </div>
-       <span class="w-12 text-right">
-        10,3%
-       </span>
-      </div>
-      <div class="flex items-center space-x-2 text-xs text-gray-600 mb-1 select-none">
-       <span class="w-10 flex items-center justify-end space-x-1 text-right">
-        <i class="fas fa-star star-yellow text-[10px]"></i>
-        <span>2</span>
-       </span>
-       <div class="h-3 rounded-full bg-purple-200" style="width: 1.3%">
-       </div>
-       <span class="w-12 text-right">
-        1,3%
-       </span>
-      </div>
-      <div class="flex items-center space-x-2 text-xs text-gray-600 select-none">
-       <span class="w-10 flex items-center justify-end space-x-1 text-right">
-        <i class="fas fa-star star-yellow text-[10px]"></i>
-        <span>1</span>
-       </span>
-       <div class="h-3 rounded-full bg-purple-100" style="width: 0.1%">
-       </div>
-       <span class="w-12 text-right">
-        0,1%
-       </span>
-      </div>
-     </div>
-    </div>
-   </section>
-   <!-- Reviews list -->
-   <section class="space-y-6">
-<!-- Review 1 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">
-      AurelKim
-    </span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">
-      13 Maret 2023
-    </time>
-  </div>
 
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">
-      Konser Impian Seumur Hidup
-    </p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Ini pertama kalinya aku nonton JKT48 langsung dan aku sangat puas karena
-      aku lihat JKT48nya sangat energik. Aku juga suka lagu-lagunya. Terima kasih
-      sudah membuat konser ini.
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i>
-        <span>1</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i>
-        <span>0</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Tombol tong sampah merah di bawah kanan -->
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-  <i class="fas fa-trash-alt text-lg"></i>
-</button>
-</article>
-
-    <!-- Review 2 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="far fa-star text-gray-300"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">
-      blinkzone88
-    </span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">
-      13 Maret 2023
-    </time>
-  </div>
-
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">
-      Seru tapi ada kendala teknis
-    </p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Overall sangat seru dan seru banget tapi agak kurang pas. Ada kendala teknis
-      yang bikin agak terganggu sedikit. Selain itu, sistem masuknya juga kurang
-      lancar, tapi yang penting tiketnya dan acara oke dan seru deh. Totalnya
-      puas banget dan bakal nonton lagi kalau ada acara JKT48 lagi. Sukses terus
-      buat acara TixMeUp.
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i>
-        <span>0</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i>
-        <span>1</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Tombol tong sampah merah di kanan bawah -->
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-    <i class="fas fa-trash-alt text-lg"></i>
-  </button>
-</article>
-
-    <!-- Review 3 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="fas fa-star"></i>
-      <i class="far fa-star text-gray-300"></i>
-      <i class="far fa-star text-gray-300"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">
-      jisoostan_21
-    </span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">
-      5 Maret 2023
-    </time>
-  </div>
-
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">
-      Crowd Management Harus Dievaluasi
-    </p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Aku agak kesal karena acara pembukaan agak terlambat dan susah ke lokasi.
-      Tapi yang paling aku sesalkan adalah crowd management. Antrian masuk
-      berantakan dan agak kurang terkoordinasi. Aku berharap panitia bisa lebih
-      disiplin dan tertib supaya acara bisa lebih lancar. Semoga ke depannya
-      lebih baik lagi.
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i>
-        <span>0</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i>
-        <span>0</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Tombol tong sampah merah di kanan bawah -->
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-    <i class="fas fa-trash-alt text-lg"></i>
-  </button>
-</article>
-
-    <!-- Review 4 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">hanablink</span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">12 Maret 2023</time>
-  </div>
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">Worth Every Second!</p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Konsernya sangat seru banget dan banyak lagu yang dinyanyikan. Aku sangat
-      puas dengan acara ini. Meskipun agak sedikit ada gangguan saat masuk tapi
-      overall sangat happy. Aku suka banget konser ini dan pengen nonton lagi
-      terus - terussaya pasti nonton lagi kalau ada konser JKT48 lagi. Terima
-      kasih TixMeUp, pokoknya sukses terus yaa &lt;3
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i><span>1</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i><span>0</span>
-      </button>
-    </div>
-  </div>
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-    <i class="fas fa-trash-alt text-lg"></i>
-  </button>
-</article>
-
-<!-- Review 5 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">bp4ever</span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">15 Maret 2023</time>
-  </div>
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">BLACKPINK Slay All Night</p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Aku suka banget dengan acara BLACKPINK yang keren banget konsepnya dan
-      penampilannya luar biasa. Aku juga suka lagu-lagunya yang enak didengar.
-      Aku berharap acara seperti ini bisa terus ada dan makin keren lagi. Terima
-      kasih TixMeUp atas pengalaman yang luar biasa ini.
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i><span>1</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i><span>0</span>
-      </button>
-    </div>
-  </div>
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-    <i class="fas fa-trash-alt text-lg"></i>
-  </button>
-</article>
-
-<!-- Review 6 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">ryuzakura</span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">17 Maret 2023</time>
-  </div>
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">Magical Night with BLACKPINK</p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Dua kata buat acara ini: magical night! Aku terpesona pada tata cahaya dan
-      desain panggungnya. Semua anggota tampil dengan sangat memukau dan lagu-lagu
-      mereka sangat enak didengar. Aku sangat ingin datang lagi ke acara seperti
-      ini. Terima kasih TixMeUp sudah membuat malamku sangat spesial.
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i><span>1</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i><span>0</span>
-      </button>
-    </div>
-  </div>
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-    <i class="fas fa-trash-alt text-lg"></i>
-  </button>
-</article>
-
-<!-- Review 7 -->
-<article class="flex space-x-4 relative review-item border p-4 rounded-md shadow-sm">
-  <div class="flex-shrink-0 flex flex-col items-center leading-none select-none">
-    <div class="text-yellow-400 text-lg">
-      <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-    </div>
-    <span class="mt-1 text-xs font-semibold text-black select-text">icha_luvrosé</span>
-    <time class="text-xs text-gray-500 mt-0.5 select-none">18 Maret 2023</time>
-  </div>
-  <div class="flex-1">
-    <p class="text-sm mt-1 text-gray-900 select-text font-semibold">Sempurna Tapi Masih Bisa Lebih Baik</p>
-    <p class="text-xs text-gray-600 mt-1 select-text">
-      Aku sangat bangga menjadi bagian dari BLACKPINK. Lagu-lagu mereka penuh
-      energi dan penampilan mereka sangat luar biasa. Namun, pengalaman masuk
-      ke venue agak kurang nyaman. Aku berharap panitia bisa memperbaiki hal ini
-      supaya pengalaman menonton bisa lebih baik lagi. Tapi secara keseluruhan,
-      aku sangat puas dan akan terus support mereka! Wajib nonton lagi!
-    </p>
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i><span>1</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i><span>0</span>
-      </button>
-    </div>
-  </div>
-  <button class="absolute bottom-0 right-2 mb-1 text-red-600 hover:text-red-800 delete-button" type="button">
-    <i class="fas fa-trash-alt text-lg"></i>
-  </button>
-</article>
-
-<!-- Script untuk menghapus review saat tombol tong sampah diklik -->
-<script>
-  document.querySelectorAll('.delete-button').forEach(button => {
-    button.addEventListener('click', function () {
-      const review = this.closest('.review-item');
-      if (review) review.remove();
+        // Optional toggle admin/promotor (jika ada)
+        const toggleAdminPromotor = document.getElementById('toggleAdminPromotor');
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        if (toggleAdminPromotor && adminPromotorList) {
+            toggleAdminPromotor.addEventListener('click', function () {
+                adminPromotorList.classList.toggle('hidden');
+            });
+        }
     });
-  });
 </script>
-   </section>
-   <!-- More complete button -->
-   <div class="flex justify-end mt-8">
-    <button class="flex items-center space-x-2 text-xs text-black border border-black rounded px-4 py-2 select-none" type="button">
-     <span>
-      More complete
-     </span>
-     <i class="fas fa-chevron-right">
-     </i>
-    </button>
-   </div>
-  </main>
+
+    </nav>
+  <div class="overflow-x-auto shadow-lg rounded-lg">
+    <table class="min-w-full table-auto text-sm border border-gray-200 bg-white">
+        <thead class="bg-[#f3f4f6] text-gray-700 uppercase tracking-wider text-xs">
+            <tr>
+                <th class="px-4 py-3 border">#</th>
+                <th class="px-4 py-3 border">User</th>
+                <th class="px-4 py-3 border">Title</th>
+                <th class="px-4 py-3 border">Review</th>
+                <th class="px-4 py-3 border">Rating</th>
+                <th class="px-4 py-3 border">Created At</th>
+                <th class="px-4 py-3 text-center border">Action</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 text-gray-800">
+            @forelse($reviews as $review)
+                <tr class="hover:bg-gray-50 transition duration-200">
+                    <td class="px-4 py-3 border">{{ $loop->iteration }}</td>
+                    <td class="px-4 py-3 border">{{ $review->user->name ?? 'Anonim' }}</td>
+                    <td class="px-4 py-3 border font-semibold text-blue-800">{{ $review->title }}</td>
+                    <td class="px-4 py-3 border break-words max-w-xs">{{ $review->body }}</td>
+                    <td class="px-4 py-3 border">
+                        <span class="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-bold text-xs">
+                            {{ $review->rating }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 border">{{ $review->created_at->format('d M Y') }}</td>
+                    <td class="px-4 py-3 text-center border">
+                        <form action="{{ route('review.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus review ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-150 text-xs">
+                                <i class="fas fa-trash-alt"></i> Hapus
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center px-6 py-4 text-gray-500">Tidak ada review ditemukan.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

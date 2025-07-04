@@ -21,21 +21,7 @@
   </style>
  </head>
  <body class="bg-white">
-    <!-- Navbar -->
-    <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
-        <div class="flex items-center space-x-2 min-w-[840px]">
-            <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" height="32"
-                src="{{ asset('img/logo.png') }}" width="32" />
-            <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
-        </div>
-        <div class="flex items-center space-x-3 min-w-[180px] justify-end">
-            <button class="text-white text-xl sm:hidden">
-                <i class="fas fa-bars"></i>
-            </button>
-            <button id="sidebarToggle" class="text-white text-xl hidden sm:block focus:outline-none">
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <!-- Sidebar -->
+                <!-- Sidebar -->
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
                 <div class="flex items-center justify-start px-4 py-3 border-b">
@@ -45,33 +31,44 @@
                         <path fill-rule="evenodd"
                             d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                     </svg>
-                    <div class="ml-4">
-                                 <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
+                     <div class="ml-4">
+    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
     <br>
     <span class="text-white text-sm">{{ Auth::user()->email }}</span>
-                    </div>
+</div>
                     <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
 
                 <ul class="p-4 space-y-4 text-white ml-4">
-                   <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
+                     <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
                     <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
 
                     <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
                    <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>
-                        <div class="flex items-center">
-                            <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none"></button>
-                        </div>
+                    <li>
+
                     </li>
                     <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
                 </ul>
+                        <div class="flex items-center">
+
+                            <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
+                            </button>
+                        </div>
+                    </li>
+                   @auth
+@endauth
+
+                </ul>
             </div>
         </div>
+
     </nav>
+
             <!--popup-->
             <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
             <div class="flex items-center justify-center min-h-screen">
@@ -84,56 +81,73 @@
                 </div>
             </div>
             </div>
-    <script>
-        // JavaScript to toggle the visibility of Admin and Promotor options
-        document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-            const adminPromotorList = document.getElementById('adminPromotorList');
-            adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
-        });
+                <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const close = document.getElementById('closeSidebar');
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutConfirmation = document.getElementById('logoutConfirmation');
+        const logoutForm = document.getElementById('logoutForm');
+        const yesButton = logoutConfirmation?.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation?.querySelector('.bg-gray-400');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const close = document.getElementById('closeSidebar');
-            const logoutButton = document.getElementById('logoutButton');
-            const logoutConfirmation = document.getElementById('logoutConfirmation');
-            const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-            const noButton = logoutConfirmation.querySelector('.bg-gray-400');
-
+        // Sidebar toggle
+        if (toggle && sidebar) {
             toggle.addEventListener('click', () => {
                 sidebar.classList.remove('translate-x-full');
             });
+        }
 
+        if (close && sidebar) {
             close.addEventListener('click', () => {
                 sidebar.classList.add('translate-x-full');
             });
+        }
 
-            // Show logout confirmation popup
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                logoutConfirmation.classList.remove('hidden'); // Show popup
+        // Show logout confirmation popup
+        if (logoutButton && logoutConfirmation) {
+            logoutButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                logoutConfirmation.classList.remove('hidden');
             });
+        }
 
-            // Handle YES button click
-            yesButton.addEventListener('click', () => {
-                // Implement logout logic here
-                // For example, redirect to logout URL
-                window.location.href = '/logout'; // Change this to your logout URL
+        // YES = Submit logout form
+        if (yesButton && logoutForm) {
+            yesButton.addEventListener('click', function () {
+                logoutForm.submit();
             });
+        }
 
-            // Handle NO button click
-            noButton.addEventListener('click', () => {
-                logoutConfirmation.classList.add('hidden'); // Hide popup
+        // NO = Close popup
+        if (noButton && logoutConfirmation) {
+            noButton.addEventListener('click', function () {
+                logoutConfirmation.classList.add('hidden');
             });
+        }
 
-            // Optional: close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            });
+        // Close sidebar if click outside
+        document.addEventListener('click', function (e) {
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.add('translate-x-full');
+            }
         });
-    </script>
+
+        // Optional toggle admin/promotor (jika ada)
+        const toggleAdminPromotor = document.getElementById('toggleAdminPromotor');
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        if (toggleAdminPromotor && adminPromotorList) {
+            toggleAdminPromotor.addEventListener('click', function () {
+                adminPromotorList.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+
     </nav>
 <main class="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 py-6 mb-32">
     <h1 class="text-center font-semibold text-black text-base mb-6 select-none"> Notification </h1>

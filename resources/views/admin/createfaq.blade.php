@@ -67,6 +67,9 @@
                 </ul>
             </div>
         </div>
+            <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
     </nav>
             <!--popup-->
             <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
@@ -80,56 +83,70 @@
                 </div>
             </div>
             </div>
-    <script>
-        // JavaScript to toggle the visibility of Admin and Promotor options
-        document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-            const adminPromotorList = document.getElementById('adminPromotorList');
-            adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
-        });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const close = document.getElementById('closeSidebar');
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutConfirmation = document.getElementById('logoutConfirmation');
+        const logoutForm = document.getElementById('logoutForm');
+        const yesButton = logoutConfirmation?.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation?.querySelector('.bg-gray-400');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const close = document.getElementById('closeSidebar');
-            const logoutButton = document.getElementById('logoutButton');
-            const logoutConfirmation = document.getElementById('logoutConfirmation');
-            const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-            const noButton = logoutConfirmation.querySelector('.bg-gray-400');
-
+        // Sidebar toggle
+        if (toggle && sidebar) {
             toggle.addEventListener('click', () => {
                 sidebar.classList.remove('translate-x-full');
             });
+        }
 
+        if (close && sidebar) {
             close.addEventListener('click', () => {
                 sidebar.classList.add('translate-x-full');
             });
+        }
 
-            // Show logout confirmation popup
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                logoutConfirmation.classList.remove('hidden'); // Show popup
+        // Show logout confirmation popup
+        if (logoutButton && logoutConfirmation) {
+            logoutButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                logoutConfirmation.classList.remove('hidden');
             });
+        }
 
-            // Handle YES button click
-            yesButton.addEventListener('click', () => {
-                // Implement logout logic here
-                // For example, redirect to logout URL
-                window.location.href = '/logout'; // Change this to your logout URL
+        // YES = Submit logout form
+        if (yesButton && logoutForm) {
+            yesButton.addEventListener('click', function () {
+                logoutForm.submit();
             });
+        }
 
-            // Handle NO button click
-            noButton.addEventListener('click', () => {
-                logoutConfirmation.classList.add('hidden'); // Hide popup
+        // NO = Close popup
+        if (noButton && logoutConfirmation) {
+            noButton.addEventListener('click', function () {
+                logoutConfirmation.classList.add('hidden');
             });
+        }
 
-            // Optional: close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            });
+        // Close sidebar if click outside
+        document.addEventListener('click', function (e) {
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.add('translate-x-full');
+            }
         });
-    </script>
+
+        // Optional toggle admin/promotor (jika ada)
+        const toggleAdminPromotor = document.getElementById('toggleAdminPromotor');
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        if (toggleAdminPromotor && adminPromotorList) {
+            toggleAdminPromotor.addEventListener('click', function () {
+                adminPromotorList.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+
     </nav>
 
 <main class="max-w-2xl mx-auto px-4 py-6">

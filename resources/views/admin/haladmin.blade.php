@@ -7,6 +7,7 @@
   </title>
   <script src="https://cdn.tailwindcss.com">
   </script>
+     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;display=swap" rel="stylesheet"/>
   <style>
@@ -46,12 +47,13 @@
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
                 <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
+                     <a href="{{ route('user.editprofile') }}">
+               <img
+  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+  alt="User avatar"
+  class="w-10 h-10 rounded-full object-cover bg-white"
+/>
+                </a>
                      <div class="ml-4">
     <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
     <br>
@@ -66,7 +68,7 @@
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
+                    <li><a href="{{ route('admin.review3') }}" class="hover:underline">Review & Ratings</a></li>
 
                     <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
                    <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>
@@ -87,14 +89,12 @@
                 </ul>
             </div>
         </div>
+            <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
 
     </nav>
-    <script>
-  document.getElementById('logoutButton').addEventListener('click', function (e) {
-    e.preventDefault();
-    document.getElementById('logoutForm').submit();
-  });
-</script>
+
 
             <!--popup-->
             <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
@@ -108,67 +108,121 @@
                 </div>
             </div>
             </div>
-    <script>
-        // JavaScript to toggle the visibility of Admin and Promotor options
-        document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-            const adminPromotorList = document.getElementById('adminPromotorList');
-            adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
-        });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const close = document.getElementById('closeSidebar');
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutConfirmation = document.getElementById('logoutConfirmation');
+        const logoutForm = document.getElementById('logoutForm');
+        const yesButton = logoutConfirmation?.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation?.querySelector('.bg-gray-400');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const close = document.getElementById('closeSidebar');
-            const logoutButton = document.getElementById('logoutButton');
-            const logoutConfirmation = document.getElementById('logoutConfirmation');
-            const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-            const noButton = logoutConfirmation.querySelector('.bg-gray-400');
-
+        // Sidebar toggle
+        if (toggle && sidebar) {
             toggle.addEventListener('click', () => {
                 sidebar.classList.remove('translate-x-full');
             });
+        }
 
+        if (close && sidebar) {
             close.addEventListener('click', () => {
                 sidebar.classList.add('translate-x-full');
             });
+        }
 
-            // Show logout confirmation popup
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                logoutConfirmation.classList.remove('hidden'); // Show popup
+        // Show logout confirmation popup
+        if (logoutButton && logoutConfirmation) {
+            logoutButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                logoutConfirmation.classList.remove('hidden');
             });
+        }
 
-            // Handle YES button click
-            yesButton.addEventListener('click', () => {
-                // Implement logout logic here
-                // For example, redirect to logout URL
-                window.location.href = '/logout'; // Change this to your logout URL
+        // YES = Submit logout form
+        if (yesButton && logoutForm) {
+            yesButton.addEventListener('click', function () {
+                logoutForm.submit();
             });
+        }
 
-            // Handle NO button click
-            noButton.addEventListener('click', () => {
-                logoutConfirmation.classList.add('hidden'); // Hide popup
+        // NO = Close popup
+        if (noButton && logoutConfirmation) {
+            noButton.addEventListener('click', function () {
+                logoutConfirmation.classList.add('hidden');
             });
+        }
 
-            // Optional: close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            });
+        // Close sidebar if click outside
+        document.addEventListener('click', function (e) {
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.add('translate-x-full');
+            }
         });
-    </script>
+
+        // Optional toggle admin/promotor (jika ada)
+        const toggleAdminPromotor = document.getElementById('toggleAdminPromotor');
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        if (toggleAdminPromotor && adminPromotorList) {
+            toggleAdminPromotor.addEventListener('click', function () {
+                adminPromotorList.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+
     </nav>
-  <!-- Carousel -->
-  <div class="relative border-b border-[#00108b]">
-    <img alt="Black and white photo of four women posing with red BLACKPINK text overlay" class="w-full object-cover max-h-[250px]" height="250" src="{{ asset('img/Blackpink.png') }}" width="1200"/>
-    <button aria-label="Previous slide" class="absolute top-1/2 left-2 -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 text-2xl text-[#00108b]">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button aria-label="Next slide" class="absolute top-1/2 right-2 -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 text-2xl text-[#00108b]">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
+<!-- Carousel -->
+ <div
+  x-data="{
+    images: [
+      '{{ asset('img/Blackpink.png') }}',
+      '{{ asset('img/oppah.jpg') }}',
+      '{{ asset('img/jini2.jpg') }}',
+      '{{ asset('img/lissa.png') }}'
+    ],
+    activeIndex: 0,
+    next() { this.activeIndex = (this.activeIndex + 1) % this.images.length },
+    prev() { this.activeIndex = (this.activeIndex - 1 + this.images.length) % this.images.length },
+    autoplay() {
+      setInterval(() => { this.next() }, 3000);
+    }
+  }"
+  x-init="autoplay()"
+  class="relative border-b border-[#00108b] h-[250px] overflow-hidden"
+>
+  <!-- Image Slides -->
+  <template x-for="(image, index) in images" :key="index">
+    <img
+      x-show="activeIndex === index"
+      x-transition
+      x-cloak
+      :src="image"
+      class="absolute inset-0 w-full h-[250px] object-cover"
+    />
+  </template>
+
+  <!-- Previous Button -->
+  <button
+    @click="prev"
+    aria-label="Previous slide"
+    class="absolute top-1/2 left-2 -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 text-2xl text-[#00108b]"
+  >
+    <i class="fas fa-chevron-left"></i>
+  </button>
+
+  <!-- Next Button -->
+  <button
+    @click="next"
+    aria-label="Next slide"
+    class="absolute top-1/2 right-2 -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 text-2xl text-[#00108b]"
+  >
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+
+
 
   <!-- Stats -->
 <section class="max-w-6xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">

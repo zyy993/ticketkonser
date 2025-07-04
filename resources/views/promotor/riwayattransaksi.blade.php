@@ -15,7 +15,7 @@
     }
   </style>
  </head>
- <body class="bg-white">
+ <body class="bg-white min-h-screen">
     <!-- Navbar -->
     <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
         <div class="flex items-center space-x-2 min-w-[840px]">
@@ -340,6 +340,7 @@
      </button>
     </div>
    </div>
+    </body>
   </main>
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
@@ -451,5 +452,5 @@
       </div>
     </div>
   </footer>
- </body>
+
 </html>

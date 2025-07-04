@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Horizon;
 use App\Models\TicketType;
 use App\Models\Home;
+use App\Models\Moment;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -83,7 +85,7 @@ public function tampilInfo2($event_id)
     $event = Horizon::findOrFail($event_id);
     $tickets = TicketType::where('home_id', $event_id)->get();
 
-    
+
 
     return view('user.info2', compact('event', 'tickets'));
 }
@@ -121,5 +123,16 @@ public function tampilInfo($event_id)
 
     return view('user.info2', compact('event', 'tickets'));
 }
+
+
+
+    public function tampillending()
+    {
+        $contents = Home::orderBy('created_at', 'desc')->get();
+        $moments = Moment::orderBy('created_at', 'desc')->get();
+        $horizons = Horizon::orderBy('created_at', 'desc')->get();
+
+        return view('lending', compact('contents', 'moments', 'horizons'));
+    }
 
 }

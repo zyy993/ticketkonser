@@ -3,23 +3,20 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <title>
-   TixMeUp
+   TixMeUp - Riwayat Transaksi Promotor/Admin
   </title>
   <script src="https://cdn.tailwindcss.com">
   </script>
-   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&amp;display=swap" rel="stylesheet"/>
+
   <style>
    body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Inter', sans-serif;
     }
-    html {
-    scroll-behavior: smooth;
-  }
   </style>
  </head>
- <body class="bg-white text-gray-900 scroll-smooth">
+ <body class="bg-white flex flex-col min-h-screen">
 <!-- Navbar -->
 <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
     <div class="flex items-center space-x-2 min-w-[840px]">
@@ -149,184 +146,49 @@
         });
     });
 </script>
-<!-- Carousel -->
- <div
-  x-data="{
-    images: [
-      '{{ asset('img/Blackpink.png') }}',
-      '{{ asset('img/oppah.jpg') }}',
-      '{{ asset('img/jini2.jpg') }}',
-      '{{ asset('img/lissa.png') }}'
-    ],
-    activeIndex: 0,
-    next() { this.activeIndex = (this.activeIndex + 1) % this.images.length },
-    prev() { this.activeIndex = (this.activeIndex - 1 + this.images.length) % this.images.length },
-    autoplay() {
-      setInterval(() => { this.next() }, 3000);
-    }
-  }"
-  x-init="autoplay()"
-  class="relative border-b border-[#00108b] h-[250px] overflow-hidden"
->
-  <!-- Image Slides -->
-  <template x-for="(image, index) in images" :key="index">
-    <img
-      x-show="activeIndex === index"
-      x-transition
-      x-cloak
-      :src="image"
-      class="absolute inset-0 w-full h-[250px] object-cover"
-    />
-  </template>
+<main class="px-4 sm:px-10 py-8 flex-grow">
+  <div class="max-w-5xl mx-auto mb-4">
+    <h2 class="text-2xl font-bold text-black text-center">Transaction History</h2>
+  </div>
 
-  <!-- Previous Button -->
-  <button
-    @click="prev"
-    aria-label="Previous slide"
-    class="absolute top-1/2 left-2 -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 text-2xl text-[#00108b]"
-  >
-    <i class="fas fa-chevron-left"></i>
-  </button>
+  <div class="max-w-5xl mx-auto bg-white rounded-2xl p-4 sm:p-8 shadow-md">
+    <div class="overflow-x-auto rounded-2xl">
+     <table class="w-full border-collapse text-sm text-black">
+      <thead class="bg-gray-100 text-left text-sm">
+        <tr>
+          <th class="py-3 px-3">Tanggal</th>
 
-  <!-- Next Button -->
-  <button
-    @click="next"
-    aria-label="Next slide"
-    class="absolute top-1/2 right-2 -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full p-2 text-2xl text-[#00108b]"
-  >
-    <i class="fas fa-chevron-right"></i>
-  </button>
-</div>
+          <th class="py-3 px-3">Harga</th>
+          <th class="py-3 px-3">Status</th>
+          <th class="py-3 px-3">User</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse ($contents as $content)
+          <tr class="border-t border-gray-200 hover:bg-gray-50">
+              <td class="py-3 px-3">{{ \Carbon\Carbon::parse($content->date)->format('d/m/Y') }}</td>
 
-
-
-<!-- Filter Buttons -->
-<div class="flex space-x-4 px-6 py-4">
-  <a href="#this-month">
-    <button class="border border-[#00108b] rounded-full px-6 py-3 text-lg font-bold text-[#00108b] hover:bg-[#00108b] hover:text-white transition">
-      This Month
-    </button>
-  </a>
-  <a href="#upcoming">
-    <button class="border border-[#00108b] rounded-full px-6 py-3 text-lg font-bold text-[#00108b] hover:bg-[#00108b] hover:text-white transition">
-      Upcoming
-    </button>
-  </a>
-  <a href="#moments">
-    <button class="border border-[#00108b] rounded-full px-6 py-3 text-lg font-bold text-[#00108b] hover:bg-[#00108b] hover:text-white transition">
-      Moment's
-    </button>
-  </a>
-</div>
-
-  <main class="px-6 pb-8 max-w-[1200px] mx-auto">
-    <!-- THIS MONTH's SPOTLIGHT -->
-    <section class="mb-8" id="this-month">
-
-
-      <h2 class="text-3xl font-bold mb-4 select-none">THIS MONTH’s SPOTLIGHT</h2>
-      <div class="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
-
-@foreach ($contents as $content)
-    <div class="min-w-[370px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-">
-        @if($content->image_path)
-            <img src="{{ asset('storage/' . $content->image_path) }}" alt="{{ $content->name }}" class="rounded-t-lg object-cover w-full h-[140px]" />
-        @else
-            <img src="https://placehold.co/280x140?text=No+Image" alt="No Image" />
-        @endif
-        <div class="p-3">
-            <p class="text-xs font-semibold mb-1 select-none">{{ $content->name }}</p>
-            <div class="flex items-center text-xs text-gray-500 space-x-1 mb-2 select-none">
-                <i class="fas fa-calendar-alt"></i>
-                <span>{{ \Carbon\Carbon::parse($content->date)->format('H.i') }}</span>
-                <i class="fas fa-map-marker-alt ml-3"></i>
-                <span>{{ $content->location }}</span>
-            </div>
-           <a href="{{ route('info3', ['event_id' => $content->id]) }}">
-  <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition">More info</button>
-</a>
-
-        </div>
-    </div>
-@endforeach
-
-
-
-
-        <!-- Card 1 -->
-
-
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- ON THE HORIZON -->
- <section class="mb-8" id="upcoming">
-
-  <h2 class="text-3xl font-bold mb-4 select-none">ON THE HORIZON !!!</h2>
-  <div class="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
-    {{-- Debug --}}
-
-
-   @forelse ($horizons as $horizon)
-  <div class="min-w-[370px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-0">
-    <img
-      alt="{{ $horizon->title }}"
-      class="rounded-t-lg object-cover w-full h-[140px]"
-      height="140"
-      width="280"
-      src="{{ asset('storage/' . $horizon->image_path) }}"
-    />
-    <div class="p-3">
-      <p class="text-xs font-semibold mb-1 select-none">{{ $horizon->title }}</p>
-      <div class="flex items-center text-xs text-gray-500 space-x-1 mb-2 select-none">
-        <i class="fas fa-calendar-alt"></i>
-        <span>{{ $horizon->jam }}</span>
-        <i class="fas fa-map-marker-alt ml-3"></i>
-        <span>{{ $horizon->lokasi }}</span>
-      </div>
-      <a href="{{ route('info2', ['event_id' => $horizon->id]) }}">
-        <button class="bg-blue-600 text-white text-xs font-semibold rounded px-3 py-1" type="button">
-          More Info
-        </button>
-      </a>
+              <td class="py-3 px-3">Rp{{ number_format($content->total_harga, 0, ',', '.') }}</td>
+              <td class="py-3 px-3">
+                <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-md">
+                  Success
+                </span>
+              </td>
+              <td class="py-3 px-3">
+                  {{ $content->user->name ?? 'User Tidak Diketahui' }}<br>
+                  <span class="text-xs text-gray-500">ID: {{ $content->user->id ?? '-' }}</span>
+              </td>
+          </tr>
+        @empty
+          <tr>
+              <td colspan="5" class="text-center text-gray-500 py-6">Tidak ada data transaksi.</td>
+          </tr>
+        @endforelse
+      </tbody>
+     </table>
     </div>
   </div>
-@empty
-  <p class="text-sm text-gray-600">Tidak ada data horizon untuk saat ini.</p>
-@endforelse
-  </div>
-</section>
-
-  </main>
-  <!-- Moments We Loved -->
- <section class="bg-[#0B1A8C] mt-12 py-8" id="moments">
-   <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
-      <h2 class="text-white font-semibold text-lg sm:text-xl mb-6 select-none">
-         Moments We Loved
-      </h2>
-      <div class="grid grid-cols-3 gap-4">
-         @forelse ($moments as $moment)
-            <img
-               alt="Moment"
-               class="rounded-lg object-cover w-full h-[130px]"
-               height="200"
-               width="300"
-               src="{{ asset('storage/' . $moment->image_path) }}"
-            />
-         @empty
-            <p class="text-white col-span-3 text-center">Belum ada moment yang tersedia.</p>
-         @endforelse
-      </div>
-   </div>
-   <!-- Live Chat Bubble (Link to Live Chat Page) -->
-<a href="{{ route('livechat') }}"
-   class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
-    <i class="fas fa-comment-dots text-xl"></i>
-</a>
-
-</section>
-
+</main>
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">
@@ -437,3 +299,5 @@
       </div>
     </div>
   </footer>
+ </body>
+</html>

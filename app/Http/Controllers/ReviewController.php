@@ -41,4 +41,25 @@ class ReviewController extends Controller
 
         return redirect()->back()->with('success', 'Review berhasil dikirim.');
     }
+
+
+    public function destroy($id)
+{
+    $review = Review::findOrFail($id);
+
+    // Optional: hanya admin yang bisa menghapus
+    if (auth()->user()->role !== 'admin') {
+        return redirect()->back()->with('error', 'Akses ditolak.');
+    }
+
+    $review->delete();
+
+    return redirect()->route('admin.review3')->with('success', 'Review berhasil dihapus.');
+}
+
+public function indexw()
+{
+    $reviews = Review::with('user')->latest()->get();
+    return view('admin.review3', compact('reviews'));
+}
 }

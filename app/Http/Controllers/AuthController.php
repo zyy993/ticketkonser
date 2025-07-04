@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 
 class AuthController extends Controller
 {
@@ -61,7 +62,7 @@ class AuthController extends Controller
                 case 'promotor':
                     return redirect('/promotor/dashboard');
                 case 'user':
-                    return redirect('/');
+                    return redirect('/home');
                 default:
                     return redirect( '/');
             }
@@ -109,6 +110,17 @@ $user = Auth::user();
 
     $user->save();
 
-    return redirect('/')->with('success', 'Profile updated successfully!');
+    return redirect('/home')->with('success', 'Profile updated successfully!');
 }
+
+public function destroy(Request $request): RedirectResponse
+{
+    Auth::guard('web')->logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/'); // arahkan ke halaman utama
+}
+
 }

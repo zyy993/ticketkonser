@@ -7,7 +7,8 @@
   </title>
   <script src="https://cdn.tailwindcss.com">
   </script>
-   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;display=swap" rel="stylesheet"/>
   <style>
@@ -35,121 +36,21 @@
         </div>
     </div>
     <div class="flex items-center space-x-3 min-w-[180px] justify-end">
-        <button class="text-white text-xl sm:hidden">
-            <i class="fas fa-bars"></i>
-        </button>
-        <button id="sidebarToggle" class="text-white text-xl hidden sm:block focus:outline-none">
-            <i class="fas fa-chevron-down"></i>
-        </button>
 
-        <!-- Sidebar -->
-        <div id="sidebar" class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-            <div class="flex items-center justify-start px-4 py-3 border-b">
-                 <a href="{{ route('user.editprofile') }}">
-               <img
-  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
-  alt="User avatar"
-  class="w-10 h-10 rounded-full object-cover bg-white"
-/>
-                </a>
-                <div class="ml-4">
-                    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-                    <br>
-                    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
-                </div>
-                <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+        <!-- Sign In & Sign Up Buttons -->
+        <a href="/signin"
+        class="text-white border border-white px-4 py-1.5 rounded-full text-sm hover:bg-white hover:text-[#00108b] transition duration-200 ease-in-out">
+        Sign In
+        </a>
+        <a href="/signup"
+        class="text-white border border-white px-4 py-1.5 rounded-full text-sm hover:bg-white hover:text-[#00108b] transition duration-200 ease-in-out">
+        Sign Up
+        </a>
 
-            <ul class="p-4 space-y-4 text-white ml-4">
-              <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
-                    <li><a href="{{ route('user.shoppingbasket') }}" class="hover:underline">Shopping Basket</a></li>
-                    <li><a href="{{ route('riwayat.indext') }}" class="hover:underline">Transaction History</a></li>
-
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Reviews &amp; Ratings</a></li>
-                    <li><a href="{{ route('user.faq1') }}" class="hover:underline">FAQ</a></li>
-                    <li>
-                    </li>
-                    <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
-                    <div class="flex items-center">
-                        <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
-                            <!-- Optional Admin/Promotor Toggle -->
-                        </button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-    </div>
-    <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
-    @csrf
-</form>
 
 </nav>
 
-<!-- Popup for Logout Confirmation -->
-<div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-            <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
-            <div class="flex justify-center space-x-4">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
-                <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // JavaScript to toggle the visibility of Admin and Promotor options
-    document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-        const adminPromotorList = document.getElementById('adminPromotorList');
-        adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.getElementById('sidebar');
-        const toggle = document.getElementById('sidebarToggle');
-        const close = document.getElementById('closeSidebar');
-        const logoutButton = document.getElementById('logoutButton');
-        const logoutConfirmation = document.getElementById('logoutConfirmation');
-        const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-        const noButton = logoutConfirmation.querySelector('.bg-gray-400');
-
-        toggle.addEventListener('click', () => {
-            sidebar.classList.remove('translate-x-full');
-        });
-
-        close.addEventListener('click', () => {
-            sidebar.classList.add('translate-x-full');
-        });
-
-        // Show logout confirmation popup
-        logoutButton.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent default action
-            logoutConfirmation.classList.remove('hidden'); // Show popup
-        });
-
-        // Handle YES button click
-        yesButton.addEventListener('click', () => {
-    document.getElementById('logoutForm').submit();
-});
-
-        // Handle NO button click
-        noButton.addEventListener('click', () => {
-            logoutConfirmation.classList.add('hidden'); // Hide popup
-        });
-
-        // Optional: close sidebar when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                sidebar.classList.add('translate-x-full');
-            }
-        });
-    });
-</script>
-<!-- Carousel -->
+  <!-- Carousel -->
  <div
   x-data="{
     images: [
@@ -197,7 +98,6 @@
     <i class="fas fa-chevron-right"></i>
   </button>
 </div>
-
 
 
 <!-- Filter Buttons -->
