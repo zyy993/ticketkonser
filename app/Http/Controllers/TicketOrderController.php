@@ -74,5 +74,14 @@ public function rejectPayment($id)
 
 
 
+public function showETicket($id)
+{
+    $order = TicketOrder::with(['ticket.event'])->findOrFail($id);
+    return view('user.ticket_download', compact('order'));
+}
+
+
+
+
 
 }

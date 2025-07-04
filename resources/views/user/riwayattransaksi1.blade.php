@@ -16,7 +16,7 @@
     }
   </style>
  </head>
- <body class="bg-white">
+ <body class="bg-white flex flex-col min-h-screen">
     <!-- Navbar -->
     <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
         <div class="flex items-center space-x-2 min-w-[840px]">
@@ -127,7 +127,7 @@
         });
     </script>
     </nav>
-<main class="px-4 sm:px-10 py-8">
+<main class="px-4 sm:px-10 py-8 flex-grow">
   <div class="max-w-5xl mx-auto mb-4">
     <h2 class="text-2xl font-bold text-black text-center">Transaction History</h2>
   </div>

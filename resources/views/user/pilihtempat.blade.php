@@ -288,15 +288,11 @@
         });
     </script>
     </nav>
-
-
-
 <main class="max-w-5xl mx-auto mt-8 px-6 mb-16">
-
-
-
-    <h2 class="text-xl font-bold mb-4 text-center">Pilih Tempat Duduk</h2>
-
+    <!-- Stage -->
+                <div class="bg-black text-white font-bold text-center py-16 text-lg rounded-tl-md rounded-tr-md w-1/2 mx-auto mb-3" style="font-family: Arial, sans-serif;">
+                    STAGE
+                </div>
     <div class="flex justify-between gap-1.5">
         <!-- LEFT ZONES -->
         <div class="flex flex-col gap-1.5 w-1/3">
@@ -326,6 +322,9 @@
             <div class="bg-[#d67ca0] seat text-white font-bold text-sm text-center py-12 rounded-b-md cursor-pointer"
                  data-seat-name="ZONE C"
                  onclick="selectSeat(this, 'ZONE C')">ZONE C</div>
+
+
+            
         </div>
 
         <!-- RIGHT ZONES -->
@@ -361,7 +360,7 @@
             Pilih Tempat
         </button>
 
-        <p id="hargaDisplay" class="mt-3 text-sm text-gray-800 font-medium"></p>
+        <p id="hargaDisplay" class="mt-3 text-sm text-white "></p>
     </form>
 </main>
 

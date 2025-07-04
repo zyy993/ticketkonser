@@ -29,59 +29,68 @@
   </nav>
 
   <!-- Main content with background image from Laravel asset -->
-  <main
-    class="flex-grow flex flex-col items-center justify-center px-4 py-10 relative"
+  <main class="flex-grow flex flex-col items-center justify-center px-4 py-10 relative">
+  <img
+    alt="Background image showing glowing headphones and globe digital background with greenish particles on black"
+    class="absolute inset-0 w-full h-full object-cover -z-10"
+    src="{{ asset('img/bgsignup.jpg') }}"
+  />
 
+  <form
+    action="{{ route('register.with.otp') }}"
+    method="POST"
+    aria-label="Sign Up Form"
+    class="relative w-full max-w-md flex flex-col items-center space-y-3 px-6 py-8 bg-transparent"
   >
-    <img
-      alt="Background image showing glowing headphones and globe digital background with greenish particles on black"
-      class="absolute inset-0 w-full h-full object-cover -z-10"
-      src="{{ asset('img/bgsignup.jpg') }}"
-    />
-    <form action="{{ route('submit.registrasi') }}" method="post"
-
-      aria-label="Sign Up Form"
-      class="relative w-full max-w-md flex flex-col items-center space-y-3 px-6 py-8 bg-transparent"
-    >
     @csrf
 
+    <h2 class="text-white font-bold text-xl mb-4 select-none z-10">Sign Up</h2>
 
+    {{-- Name --}}
+    <input
+      class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
+      placeholder="Name"
+      type="text"
+      name="name"
+      required
+    />
 
-      <h2 class="text-white font-bold text-xl mb-2 select-none z-10">Sign Up</h2>
+    {{-- Email --}}
+    <input
+      class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
+      placeholder="Email"
+      type="email"
+      name="email"
+      required
+    />
 
-       <input
-        class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
-        placeholder="name"
-        type="name" name="name"
-        />
+    {{-- No HP --}}
+    <input
+      class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
+      placeholder="No HP"
+      type="text"
+      name="no_hp"
+      required
+    />
 
-      <input
-        class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
-        placeholder="Email"
-        type="email" name="email"
-      />
-      <input
-        class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
-        placeholder="Password"
-        type="password" name="password"
-      />
+    {{-- Password --}}
+    <input
+      class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
+      placeholder="Password"
+      type="password"
+      name="password"
+      required
+    />
 
-       <input
-        class="w-full rounded-lg bg-[#E5E7EB] bg-opacity-80 placeholder-gray-400 text-gray-700 py-2 px-4 text-sm focus:outline-none z-10"
-        placeholder="confirm password"
-        type="password" name="no_hp"
-      />
+    <button
+      class="w-full rounded-md bg-[#4F6D8C] text-white font-semibold py-2 text-sm hover:bg-[#3e5670] transition-colors z-10"
+      type="submit"
+    >
+      Sign Up
+    </button>
+  </form>
+</main>
 
-
-      <button
-        class="w-full rounded-md bg-[#4F6D8C] text-white font-semibold py-2 text-sm hover:bg-[#3e5670] transition-colors z-10"
-        type="submit"
-      >
-        Sign Up
-      </button>
-    </form>
-
-  </main>
 
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">

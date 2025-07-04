@@ -240,10 +240,10 @@
 
     if (!selectedBank) {
       // Jika belum pilih bank, tampilkan popup dengan hanya tombol OK
-      showPopup("Please select a bank before proceeding.", false);
+      showPopup("Silahkan Pilih Bank Terlebih Dahulu", false);
     } else {
       // Jika sudah pilih bank, tampilkan popup hanya dengan tombol Proceed
-      showPopup("Bank selected: " + selectedBank + "<br>Proceed to payment?", true);
+      showPopup("Virtual Account: " + selectedBank + "<br>0 9 8 7 6 5 4 3 2 1 2 3 4 5", true);
     }
   });
 
@@ -262,10 +262,12 @@
 
     const popupBox = document.createElement('div');
     popupBox.style.backgroundColor = 'white';
-    popupBox.style.padding = '20px';
+    popupBox.style.padding = '30px'; // Meningkatkan padding
     popupBox.style.borderRadius = '8px';
     popupBox.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.3)';
     popupBox.style.textAlign = 'center';
+    popupBox.style.width = '400px'; // Menentukan lebar popup
+    popupBox.style.maxWidth = '90%'; // Menjaga responsivitas
 
     let buttonHTML = '';
 
@@ -273,7 +275,7 @@
       // Jika bank sudah dipilih, tampilkan hanya tombol Proceed
       buttonHTML = `
         <button id="popupProceedBtn" style="margin: 0 10px; padding: 8px 16px; background-color: #0B1460; color: white; border: none; border-radius: 4px; cursor: pointer;">
-          Proceed
+          Done
         </button>
       `;
     } else {
@@ -306,6 +308,7 @@
     }
   }
 </script>
+
 
 
   <!-- Footer -->

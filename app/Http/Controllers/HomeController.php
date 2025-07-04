@@ -373,4 +373,6 @@ public function showShoppingBasket()
     return view('user.shoppingbasket', compact('orders'));
 }
 
+
+
 }

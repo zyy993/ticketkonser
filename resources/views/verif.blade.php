@@ -28,29 +28,36 @@
     <span class="text-white font-extrabold text-lg select-none">TixMeUp</span>
   </nav>
   <!-- Main content -->
-  <main class="flex-grow flex flex-col items-center justify-center px-4 text-center relative" style="background-color: transparent;">
-   <img alt="Digital globe with green glowing particles background" class="absolute inset-0 w-full h-full object-cover opacity-70 -z-10" height="400" src="{{ asset('img/bgsignup.jpg') }}" width="600"/>
-   <h1 class="font-extrabold text-white text-xl sm:text-2xl md:text-3xl leading-tight max-w-md mx-auto">
+<main class="flex-grow flex flex-col items-center justify-center px-4 text-center relative" style="background-color: transparent;">
+  <img alt="Digital globe with green glowing particles background" class="absolute inset-0 w-full h-full object-cover opacity-70 -z-10" height="400" src="{{ asset('img/bgsignup.jpg') }}" width="600"/>
+
+  <h1 class="font-extrabold text-white text-xl sm:text-2xl md:text-3xl leading-tight max-w-md mx-auto">
     LET’S VERIFY YOUR EMAIL
-   </h1>
-   <p class="italic text-white text-xs sm:text-sm max-w-md mt-2 mx-auto px-2">
-    We already send a code to your email, please check your inbox and insert the code in form below to verify our email
-   </p>
-   <form class="mt-6 max-w-md w-full px-4 sm:px-0">
+  </h1>
+
+  <p class="italic text-white text-xs sm:text-sm max-w-md mt-2 mx-auto px-2">
+    We already sent a code to your email, please check your inbox and insert the code in the form below to verify your email.
+  </p>
+
+  <form method="POST" action="{{ route('otp.verify') }}" class="mt-6 max-w-md w-full px-4 sm:px-0">
+    @csrf
+    <input type="hidden" name="email" value="{{ $email }}" />
+
     <div class="flex justify-center gap-4 mb-6">
-     <input aria-label="Verification code digit 1" class="w-16 h-16 rounded-lg bg-white bg-opacity-80 text-black text-3xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-[#02096e]" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"/>
-     <input aria-label="Verification code digit 2" class="w-16 h-16 rounded-lg bg-white bg-opacity-80 text-black text-3xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-[#02096e]" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"/>
-     <input aria-label="Verification code digit 3" class="w-16 h-16 rounded-lg bg-white bg-opacity-80 text-black text-3xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-[#02096e]" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"/>
-     <input aria-label="Verification code digit 4" class="w-16 h-16 rounded-lg bg-white bg-opacity-80 text-black text-3xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-[#02096e]" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text"/>
+      @for($i = 1; $i <= 6; $i++)
+        <input name="otp[]" aria-label="OTP digit {{ $i }}" class="w-16 h-16 rounded-lg bg-white bg-opacity-80 text-black text-3xl font-semibold text-center focus:outline-none focus:ring-2 focus:ring-[#02096e]" inputmode="numeric" maxlength="1" pattern="[0-9]*" type="text" required />
+      @endfor
     </div>
+
     <button class="w-full bg-[#607d9a] text-white font-semibold text-lg py-3 rounded-md hover:bg-[#506b85] transition-colors" type="submit">
-     Verify
+      Verify
     </button>
-   </form>
-   <p class="italic text-white text-xs max-w-md mt-4 px-2">
-    Don’t worry it’s only one time, once your email is verified you do not need to do this anymore
-   </p>
-  </main>
+  </form>
+
+  <p class="italic text-white text-xs max-w-md mt-4 px-2">
+    Don’t worry, it’s only one time. Once your email is verified, you won’t need to do this again.
+  </p>
+</main>
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

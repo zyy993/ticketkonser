@@ -80,15 +80,8 @@
                             <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
                             </button>
                         </div>
-
                     </li>
                    @auth
-  <li>
-    <a href="#" id="logoutButton" class="hover:underline">Logout</a>
-    <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
-      @csrf
-    </form>
-  </li>
 @endauth
 
                 </ul>

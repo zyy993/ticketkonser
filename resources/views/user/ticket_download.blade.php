@@ -72,14 +72,18 @@
                 {{ str_pad($order->id, 11, '0', STR_PAD_LEFT) }}
             </div>
         </div>
-
+<br>
+        <div class="mb-4">
+    {!! QrCode::size(200)->generate($order->id . '|' . $order->seat_name . '|' . $order->total_harga) !!}
+</div>
+<br>
         <div class="text-center mt-6 no-print">
             <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                 🖨️ Cetak Tiket
             </button>
         </div>
          <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
-                 
+
     </div>
 </body>
 </html>

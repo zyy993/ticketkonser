@@ -146,92 +146,51 @@
     </script>
     </nav>
   <!-- Main content -->
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 py-8">
-   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-    <h1 class="text-black font-bold text-xl select-none">
-     Edit Profile
-    </h1>
-    <img alt="User avatar circle with blue background and user silhouette" class="w-20 h-20 rounded-full mt-4 sm:mt-0" height="80" src="{{ asset('img/kosong.png') }}" width="80"/>
-   </div>
-   <form class="space-y-6 max-w-3xl">
+ <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6 max-w-3xl">
+    @csrf
+
+    {{-- Preview Foto --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="username">
-      Username
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="username" type="text"/>
+      <label class="block text-xs font-semibold mb-1 select-none">Profile Picture</label>
+      <input type="file" name="foto" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+        file:rounded-md file:border-0
+        file:text-sm file:font-semibold
+        file:bg-blue-50 file:text-blue-700
+        hover:file:bg-blue-100">
     </div>
+
+    {{-- Username --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="email">
-      Email
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="email" type="email"/>
+      <label class="block text-xs font-semibold mb-1 select-none" for="name">Username</label>
+      <input name="name" value="{{ Auth::user()->name }}" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#0B1E8A]" />
     </div>
+
+    {{-- Email --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="address">
-      Address
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="address" type="text"/>
+      <label class="block text-xs font-semibold mb-1 select-none" for="email">Email</label>
+      <input name="email" value="{{ Auth::user()->email }}" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#0B1E8A]" />
     </div>
+
+    {{-- No HP --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="contact">
-      Contact Number
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="contact" type="tel"/>
+      <label class="block text-xs font-semibold mb-1 select-none" for="no_hp">Contact Number</label>
+      <input name="no_hp" value="{{ Auth::user()->no_hp }}" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#0B1E8A]" />
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-     <div>
-      <label class="block text-xs font-semibold mb-1 select-none" for="city">
-       City
-      </label>
-      <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="city">
-       <option disabled="" selected="" value="">
-       </option>
-       <option>
-        Yogyakarta
-       </option>
-       <option>
-        Jakarta
-       </option>
-       <option>
-        Bandung
-       </option>
-      </select>
-     </div>
-     <div>
-      <label class="block text-xs font-semibold mb-1 select-none" for="state">
-       State
-      </label>
-      <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="state">
-       <option disabled="" selected="" value="">
-       </option>
-       <option>
-        Special Region of Yogyakarta
-       </option>
-       <option>
-        DKI Jakarta
-       </option>
-       <option>
-        West Java
-       </option>
-      </select>
-     </div>
-    </div>
+
+    {{-- Password --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="password">
-      Password
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="password" type="password"/>
+      <label class="block text-xs font-semibold mb-1 select-none" for="password">Password (optional)</label>
+      <input name="password" type="password" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#0B1E8A]" />
     </div>
+
+    {{-- Tombol --}}
     <div class="flex space-x-4">
-     <button class="bg-[#6B89B1] text-white text-sm font-semibold rounded-md px-6 py-2" type="button">
-      Cancel
-     </button>
-     <button class="bg-[#6B89B1] text-white text-sm font-semibold rounded-md px-6 py-2" type="submit">
-      Save
-     </button>
+      <a href="/" class="bg-gray-300 text-black text-sm font-semibold rounded-md px-6 py-2">Cancel</a>
+      <button class="bg-[#6B89B1] text-white text-sm font-semibold rounded-md px-6 py-2" type="submit">Save</button>
     </div>
-   </form>
-  </main>
+</form>
+
+
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

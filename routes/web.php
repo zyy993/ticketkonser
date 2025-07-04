@@ -12,7 +12,8 @@ use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FaqController;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpMail;
 
 use App\Models\Chat;
 
@@ -37,7 +38,7 @@ Route::get('/login', [AuthController::class, 'tampilLogin'])->name('login.tampil
 Route::post('/login/sub', [AuthController::class, 'submitLogin'])->name('submit.login');
 
 // Route untuk menampilkan halaman beranda (dengan card event)
-Route::get('/home', [HomeController::class, 'tampilHome'])->middleware('auth')->name('home.tampil');
+Route::get('/', [HomeController::class, 'tampilHome'])->middleware('auth')->name('home.tampil');
 
 
 
@@ -49,7 +50,7 @@ Route::get('/riwayat-transaksi', [HomeController::class, 'tampilriwayat'])->name
 
 
 
-Route::get('/', function () {
+Route::get('/signup', function () {
     return view('signup');
 });
 
@@ -188,7 +189,12 @@ Route::get('/livechat', function () {
 
 Route::get('/editprofile', function () {
     return view('user.editprofile');
-});
+})->name('user.editprofile');
+
+
+
+Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+
 Route::get('/contoh', function () {
     return view('contoh');
 });
@@ -322,3 +328,20 @@ Route::delete('/faq2/delete/{id}', [FaqController::class, 'destroy'])->name('faq
 // routes/web.php
 Route::get('/admin/faq/create', [FaqController::class, 'create'])->name('faq.create');
 Route::post('/admin/faq/store', [FaqController::class, 'storee'])->name('faq.store');
+
+
+use App\Http\Controllers\Auth\OtpController;
+
+Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('otp.send');
+
+
+Route::post('/register-with-otp', [OtpController::class, 'register'])->name('register.with.otp');
+Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('otp.verify');
+
+
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
+

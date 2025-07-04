@@ -56,13 +56,15 @@
                 </div>
 
                 <ul class="p-4 space-y-4 text-white ml-4">
-                    <li><a href="#" class="hover:underline">My Tickets</a></li>
-                    <li><a href="#" class="hover:underline">Shopping Basket</a></li>
-                    <li><a href="#" class="hover:underline">Transaction History</a></li>
-                    <li><a href="#" class="hover:underline">Reviews &amp; Ratings</a></li>
-                    <li><a href="#" class="hover:underline">FAQ</a></li>
+                    <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
+                    <li><a href="{{ route('user.shoppingbasket') }}" class="hover:underline">Shopping Basket</a></li>
+                    <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Transaction History</a></li>
+
+                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Reviews &amp; Ratings</a></li>
+                    <li><a href="{{ route('user.faq1') }}" class="hover:underline">FAQ</a></li>
                     <li>
                     </li>
+                    <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
                     <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
                 </ul>
             </div>
