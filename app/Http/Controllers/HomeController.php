@@ -373,6 +373,19 @@ public function showShoppingBasket()
     return view('user.shoppingbasket', compact('orders'));
 }
 
+public function searchArtist(Request $request)
+{
+    $query = $request->input('q');
+
+    // Cari artis berdasarkan nama penyanyi
+    $content = \App\Models\Home::where('penyanyi', 'like', '%' . $query . '%')->first();
+
+    if ($content) {
+        return redirect()->route('info3', ['event_id' => $content->id]);
+    } else {
+        return redirect()->route('home.tampil')->with('not_found', 'Artist not found.');
+    }
+}
 
 
 

@@ -28,14 +28,6 @@
                 src="{{ asset('img/logo.png') }}" width="32" />
             <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
         </div>
-        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
-            <div class="relative w-full">
-                <input
-                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                    placeholder="Search by artist or event" type="text" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-            </div>
-        </div>
         <div class="flex items-center space-x-3 min-w-[180px] justify-end">
             <button class="text-white text-xl sm:hidden">
                 <i class="fas fa-bars"></i>

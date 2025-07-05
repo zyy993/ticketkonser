@@ -344,3 +344,5 @@ Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('revi
 
 
 Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+Route::get('/search/artist', [HomeController::class, 'searchArtist'])->name('search.artist');
+

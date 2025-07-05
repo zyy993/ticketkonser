@@ -17,23 +17,42 @@
     html {
     scroll-behavior: smooth;
   }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
   </style>
  </head>
  <body class="bg-white text-gray-900 scroll-smooth">
 <!-- Navbar -->
-<nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
+<nav class="bg-[#00108b] flex items-center justify-between px-6 py-2 h-[57px]">
     <div class="flex items-center space-x-2 min-w-[840px]">
         <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" src="{{ asset('img/logo.png') }}" />
         <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
     </div>
-    <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10">
-        <div class="relative w-full">
-            <input
-                class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                placeholder="Search by artist or event" type="text" />
-            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
+        <!-- FORM + NOT FOUND WRAPPER -->
+<div class="relative max-w-[400px] w-full">
+    <!-- FORM -->
+    <form action="{{ route('search.artist') }}" method="GET" class="relative flex items-center z-10">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search by artist"
+            class="w-full h-8 rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-white relative top-[6px]"
+        />
+        <i class="fas fa-search absolute left-3 top-[60%] -translate-y-1/2 text-white text-sm "></i>
+    </form>
+
+    <!-- NOT FOUND MESSAGE -->
+    @if(session('not_found'))
+        <div class="absolute left-0 right-0 mt-2 bg-red-100 border border-red-300 text-red-800 px-4 py-2 rounded-md text-sm shadow-md animate-fade-in z-20">
+            {{ session('not_found') }}
         </div>
-    </div>
+    @endif
+</div>
     <div class="flex items-center space-x-3 min-w-[180px] justify-end">
         <button class="text-white text-xl sm:hidden">
             <i class="fas fa-bars"></i>

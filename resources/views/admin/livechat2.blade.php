@@ -23,14 +23,7 @@
                 src="{{ asset('img/logo.png') }}" width="32" />
             <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
         </div>
-        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
-            <div class="relative w-full">
-                <input
-                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                    placeholder="Search by artist or event" type="text" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-            </div>
-        </div>
+
         <div class="flex items-center space-x-3 min-w-[180px] justify-end">
             <button class="text-white text-xl sm:hidden">
                 <i class="fas fa-bars"></i>
@@ -62,7 +55,7 @@
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
+                    <li><a href="{{ route('admin.review3') }}" class="hover:underline">Review & Ratings</a></li>
 
                     <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
                    <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>
@@ -164,54 +157,67 @@
         }
     });
 </script>
-
     </nav>
-    <main class=" flex-grow">
-  <!-- Chat content -->
- <h2 class="text-lg font-bold mb-4 text-center">Live Chat Admin Panel</h2>
+<main class="flex-grow px-6 py-6 bg-gradient-to-br from-blue-50 to-white min-h-screen">
+    <!-- Header -->
+    <h2 class="text-2xl font-bold mb-6 text-center text-[#00108b]">💬 Live Chat Admin Panel</h2>
 
-@foreach($users as $user)
-    <div class="mb-8 p-4 border border-gray-300 rounded-lg bg-white shadow-md">
-        <div class="flex items-center mb-4">
-            <div class="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-xl mr-3">
-                🧑
-            </div>
-            <div>
-                <h3 class="font-bold text-gray-800">Chat with {{ $user->name }}</h3>
-                <p class="text-xs text-gray-500">User ID: {{ $user->id }}</p>
-            </div>
-        </div>
-
-        <div class="space-y-2 max-h-60 overflow-y-auto bg-gray-100 rounded-md p-3 mb-3">
-            @foreach(\App\Models\Chat::where('user_id', $user->id)->orderBy('created_at')->get() as $chat)
-                <div class="flex {{ $chat->role == 'admin' ? 'justify-end' : 'justify-start' }}">
-                    <div class="flex items-end gap-2 max-w-[75%]">
-                        @if($chat->role !== 'admin')
-                            <div class="text-lg">🧑</div>
-                        @endif
-
-                        <div class="{{ $chat->role == 'admin' ? 'bg-blue-600 text-white' : 'bg-white text-gray-800' }} px-4 py-2 rounded-lg shadow text-sm">
-                            {{ $chat->message }}
-                        </div>
-
-                        @if($chat->role == 'admin')
-                            <div class="text-lg">🤖</div>
-                        @endif
-                    </div>
+    @foreach($users as $user)
+        <div class="mb-10 p-6 border border-blue-100 rounded-xl bg-white shadow-lg hover:shadow-xl transition duration-300">
+            <!-- User Info -->
+            <div class="flex items-center mb-5">
+                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl mr-4">
+                    🧑
                 </div>
-            @endforeach
+                <div>
+                    <h3 class="font-bold text-gray-800 text-lg">Chat with {{ $user->name }}</h3>
+                    <p class="text-xs text-gray-500">User ID: {{ $user->id }}</p>
+                </div>
+            </div>
+
+            <!-- Chat Box -->
+            <div class="space-y-3 max-h-64 overflow-y-auto bg-gray-50 rounded-lg p-4 mb-4 border border-gray-200">
+                @foreach(\App\Models\Chat::where('user_id', $user->id)->orderBy('created_at')->get() as $chat)
+                    <div class="flex {{ $chat->role == 'admin' ? 'justify-end' : 'justify-start' }} animate-fade-in">
+                        <div class="flex items-end gap-2 max-w-[75%]">
+                            @if($chat->role !== 'admin')
+                                <div class="text-lg">🧑</div>
+                            @endif
+
+                            <div class="{{ $chat->role == 'admin' ? 'bg-[#00108b] text-white' : 'bg-blue-100 text-gray-800' }} px-4 py-2 rounded-2xl shadow text-sm">
+                                {{ $chat->message }}
+                            </div>
+
+                            @if($chat->role == 'admin')
+                                <div class="text-lg">🤖</div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Send Message -->
+            <form method="POST" action="{{ route('admin.livechat.send') }}" class="flex gap-3">
+                @csrf
+                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                <input type="text" name="message" class="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Ketik balasan..." required>
+                <button class="bg-[#00108b] text-white px-6 py-2 rounded-full text-sm hover:bg-blue-800 transition">Kirim</button>
+            </form>
         </div>
-
-        <form method="POST" action="{{ route('admin.livechat.send') }}" class="flex gap-2">
-            @csrf
-            <input type="hidden" name="user_id" value="{{ $user->id }}">
-            <input type="text" name="message" class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Balas pesan..." required>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 transition">Kirim</button>
-        </form>
-    </div>
-@endforeach
-
+    @endforeach
 </main>
+
+<!-- Animasi -->
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+</style>
+
 
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">

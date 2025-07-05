@@ -22,14 +22,6 @@
         <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" src="{{ asset('img/logo.png') }}" />
         <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
     </div>
-    <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10">
-        <div class="relative w-full">
-            <input
-                class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                placeholder="Search by artist or event" type="text" />
-            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-        </div>
-    </div>
     <div class="flex items-center space-x-3 min-w-[180px] justify-end">
         <button class="text-white text-xl sm:hidden">
             <i class="fas fa-bars"></i>
@@ -145,25 +137,29 @@
         });
     });
 </script>
-  <!-- Chat content -->
- <main class="w-full h-screen flex flex-col p-4 bg-white">
-    <div id="chatBox" class="flex-1 overflow-y-auto bg-gray-100 p-4 rounded-md space-y-3 mb-4">
+<!-- Chat content -->
+<main class="w-full h-screen flex flex-col p-6 bg-gradient-to-br from-[#e0f2fe] to-white font-sans">
+    <!-- Judul -->
+    <h2 class="text-2xl font-extrabold text-center text-[#0B1A8C] mb-6 tracking-wide">💬 Chat dengan Admin</h2>
+
+    <!-- Chat Box -->
+    <div id="chatBox" class="flex-1 overflow-y-auto bg-white p-5 rounded-3xl shadow-xl border border-blue-200 space-y-3 mb-5 scroll-smooth transition-all duration-300">
         <!-- Chat messages will appear here -->
     </div>
 
+    <!-- Input -->
     <form id="chatForm" class="mt-auto">
         @csrf
-        <div class="flex gap-2">
+        <div class="flex items-center gap-3">
             <input type="text" name="message" id="messageInput"
-                   class="flex-grow border rounded p-2 text-sm" placeholder="Ketik pesan..." required>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">Kirim</button>
+                   class="flex-1 border border-gray-300 rounded-full px-5 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                   placeholder="Tulis pesan kamu di sini..." required>
+            <button class="bg-gradient-to-r from-[#0B1A8C] to-[#4F8EF7] text-white px-6 py-2 rounded-full text-sm shadow-md hover:shadow-lg hover:from-[#092279] hover:to-[#3a75dd] transition-all duration-300">Kirim</button>
         </div>
     </form>
-
-
 </main>
- </body>
 
+<!-- Script -->
 <script>
     function fetchChats() {
         fetch('/get-chats')
@@ -171,19 +167,25 @@
             .then(data => {
                 const box = document.getElementById('chatBox');
                 box.innerHTML = '';
+
                 data.forEach(chat => {
                     const align = chat.role === 'admin' ? 'justify-start' : 'justify-end';
-                    const bg = chat.role === 'admin' ? 'bg-gray-300 text-black' : 'bg-blue-600 text-white';
+                    const bg = chat.role === 'admin'
+                        ? 'bg-[#0B1A8C] text-white'
+                        : 'bg-[#DCF2FF] text-gray-900';
                     const avatar = chat.role === 'admin' ? '🤖' : '🧑';
 
                     box.innerHTML += `
-                        <div class="flex ${align}">
-                            <div class="max-w-xs ${bg} rounded-lg px-3 py-2 text-sm mb-1">
-                                <span class="block">${avatar} ${chat.message}</span>
+                        <div class="flex ${align} animate-fade-in">
+                            <div class="flex items-end gap-2 max-w-[75%]">
+                                ${chat.role !== 'admin' ? `<div class="text-xl">${avatar}</div>` : ''}
+                                <div class="${bg} px-5 py-2 rounded-2xl shadow-md text-sm font-medium tracking-wide">${chat.message}</div>
+                                ${chat.role === 'admin' ? `<div class="text-xl">${avatar}</div>` : ''}
                             </div>
                         </div>
                     `;
                 });
+
                 box.scrollTop = box.scrollHeight;
             });
     }
@@ -208,6 +210,15 @@
     setInterval(fetchChats, 3000);
     fetchChats();
 </script>
+
+<!-- Animasi Fade In -->
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
 
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">

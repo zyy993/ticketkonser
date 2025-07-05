@@ -54,7 +54,7 @@
                     <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
+                    <li><a href="{{ route('admin.review3') }}" class="hover:underline">Review & Ratings</a></li>
 
                     <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
                    <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>

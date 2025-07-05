@@ -22,34 +22,38 @@
  </head>
  <body class="bg-white text-gray-900 scroll-smooth">
 <!-- Navbar -->
-<nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
+<nav class="bg-[#00108b] flex items-center justify-between px-6 py-2 h-[57px]">
     <div class="flex items-center space-x-2 min-w-[840px]">
         <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" src="{{ asset('img/logo.png') }}" />
         <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
     </div>
-    <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10">
-        <div class="relative w-full">
+           <!-- FORM -->
+        <form action="{{ route('search.artist') }}" method="GET" class="relative flex items-center max-w-[400px] w-full">
             <input
-                class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                placeholder="Search by artist or event" type="text" />
-            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-        </div>
-    </div>
+            type="text"
+            name="q"
+            placeholder="Search by artist"
+            class="w-full h-8 rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-white relative top-[7px]"
+            />
+            <i class="fas fa-search absolute left-3 top-[70%] -translate-y-1/2 text-white text-sm"></i>
+        </form>
+        @if(session('not_found'))
+            <div class="bg-red-100 text-red-800 p-3 rounded mb-4">
+                {{ session('not_found') }}
+            </div>
+        @endif
     <div class="flex items-center space-x-3 min-w-[180px] justify-end">
-
         <!-- Sign In & Sign Up Buttons -->
         <a href="/signin"
-        class="text-white border border-white px-4 py-1.5 rounded-full text-sm hover:bg-white hover:text-[#00108b] transition duration-200 ease-in-out">
-        Sign In
-        </a>
+   class="text-white border border-white px-4 py-1.5 rounded-full text-xs hover:bg-white hover:text-[#00108b] transition duration-200 ease-in-out">
+   Sign In
+</a>
+
         <a href="/signup"
-        class="text-white border border-white px-4 py-1.5 rounded-full text-sm hover:bg-white hover:text-[#00108b] transition duration-200 ease-in-out">
+        class="text-white border border-white px-4 py-1.5 rounded-full text-xs hover:bg-white hover:text-[#00108b] transition duration-200 ease-in-out">
         Sign Up
         </a>
-
-
 </nav>
-
   <!-- Carousel -->
  <div
   x-data="{
@@ -149,13 +153,7 @@
         </div>
     </div>
 @endforeach
-
-
-
-
         <!-- Card 1 -->
-
-
           </div>
         </div>
       </div>
@@ -224,9 +222,7 @@
    class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
     <i class="fas fa-comment-dots text-xl"></i>
 </a>
-
 </section>
-
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

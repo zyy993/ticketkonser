@@ -134,7 +134,12 @@
     <!-- Ticket Detail Section -->
     <section class="bg-[#0B1460] rounded-md p-6 mb-6 text-white">
       <div class="flex items-center mb-4">
-        <img alt="TixMeUp logo" class="w-8 h-8 mr-2" src="{{ asset('img/logo.png') }}" />
+       <img
+  alt="TixMeUp logo"
+  class="w-8 h-8 mr-2 object-contain"
+  src="{{ asset('img/logo.png') }}"
+/>
+
         <span class="font-semibold text-base">TixMeUp</span>
       </div>
       <dl class="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 text-sm leading-tight">

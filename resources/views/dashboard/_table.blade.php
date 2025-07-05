@@ -29,7 +29,8 @@
                 <td>{{ $item->location ?? '-' }}</td>
                 <td>
                     <a href="{{ route($editRoute, $item->id) }}">Edit</a>
-                    <form action="{{ route($deleteRoute, $item->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure to delete this {{ $title }}?');">
+                    <form action="{{ route($deleteRoute, $item->id) }}" method="POST" class="delete-form" style="display:inline-block;">
+
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="delete">Delete</button>

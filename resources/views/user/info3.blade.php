@@ -14,20 +14,28 @@
  </head>
  <body class="bg-white text-gray-900">
     <!-- Navbar -->
-    <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
+    <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3 h-[57px]">
+
         <div class="flex items-center space-x-2 min-w-[840px]">
             <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" height="32"
                 src="{{ asset('img/logo.png') }}" width="32" />
             <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
         </div>
-        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
-            <div class="relative w-full">
-                <input
-                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                    placeholder="Search by artist or event" type="text" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
+                <!-- FORM -->
+        <form action="{{ route('search.artist') }}" method="GET" class="relative flex items-center max-w-[400px] w-full">
+            <input
+            type="text"
+            name="q"
+            placeholder="Search by artist"
+            class="w-full h-8 rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-white relative top-[7px]"
+            />
+            <i class="fas fa-search absolute left-3 top-[70%] -translate-y-1/2 text-white text-sm"></i>
+        </form>
+        @if(session('not_found'))
+            <div class="bg-red-100 text-red-800 p-3 rounded mb-4">
+                {{ session('not_found') }}
             </div>
-        </div>
+        @endif
         <div class="flex items-center space-x-3 min-w-[180px] justify-end">
             <button class="text-white text-xl sm:hidden">
                 <i class="fas fa-bars"></i>
@@ -242,116 +250,91 @@
 
     {{-- Loop tiket --}}
     @foreach ($tickets as $ticket)
-        <article class="border border-gray-300 rounded-xl flex overflow-hidden relative mb-4" style="width: 550px;">
-            <img
-                alt="{{ $event->name }}"
-                class="rounded-l-xl"
-                src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('img/deadline.jpg') }}"
-                style="width: 100px; height: 100%; object-fit: cover;"
-            />
+       <article class="border border-gray-300 rounded-xl flex overflow-hidden relative mb-4" style="width: 550px;">
+<div style="width: 100px; height: auto;" class="h-full">
+  <img
+      alt="{{ $event->name }}"
+      class="rounded-l-xl w-full h-full object-cover object-center"
+      src="{{ $event->image_path ? asset('storage/' . $event->image_path) : asset('img/deadline.jpg') }}"
+  />
+</div>
 
-            <div class="flex-1 p-3 flex flex-col justify-between">
-                <div>
-                    <h2 class="font-semibold text-sm text-[#1A1A1A]">
-                        {{ strtoupper($event->penyanyi) }} | {{ strtoupper($event->name) }}
-                    </h2>
-                    <ul class="text-xs text-[#4B4B4B] mt-1 space-y-1">
-                        <li class="flex items-center gap-1">
-                            <i class="fas fa-map-marker-alt text-[#4B4B4B] text-[10px]"></i>
-                            <span>{{ $event->location }}</span>
-                        </li>
-                        <li class="flex items-center gap-1">
-                            <i class="fas fa-clock text-[#4B4B4B] text-[10px]"></i>
-                            <span>
-                                Gates open at {{ optional($event->gates_open)->format('H:i') ?? '-' }} |
-                                Show starts at {{ optional($event->show_starts)->format('H:i') ?? '-' }}
-                            </span>
-                        </li>
-                    </ul>
-                    <a class="text-xs text-[#1A2EBF] mt-1 inline-block hover:underline" href="#">
-                        * Berakhir pada {{ optional($event->expired_at)->format('d M Y') }}
-                    </a>
-                </div>
 
-                <div class="flex flex-col items-end gap-2 mt-2">
-                    <div class="flex items-center gap-2">
-                        <button type="button" class="w-5 h-5 flex items-center justify-center border border-black rounded-full text-sm font-bold quantity-decrease">−</button>
-                        <span class="quantity w-4 text-center text-sm font-semibold select-none">1</span>
-                        <button type="button" class="w-5 h-5 flex items-center justify-center border border-black rounded-full text-sm font-bold quantity-increase">+</button>
-                    </div>
+    <div class="flex-1 p-3 flex flex-col justify-between">
+        <div>
+            <h2 class="font-semibold text-sm text-[#1A1A1A]">
+                {{ strtoupper($event->penyanyi) }} | {{ strtoupper($event->name) }}
+            </h2>
+            <ul class="text-xs text-[#4B4B4B] mt-1 space-y-1">
+                <li class="flex items-center gap-1">
+                    <i class="fas fa-map-marker-alt text-[#4B4B4B] text-[10px]"></i>
+                    <span>{{ $event->location }}</span>
+                </li>
+                <li class="flex items-center gap-1">
+                    <i class="fas fa-clock text-[#4B4B4B] text-[10px]"></i>
+                    <span>
+                        Gates open at {{ optional($event->gates_open)->format('H:i') ?? '-' }} |
+                        Show starts at {{ optional($event->show_starts)->format('H:i') ?? '-' }}
+                    </span>
+                </li>
+            </ul>
+            <a class="text-xs text-[#1A2EBF] mt-1 inline-block hover:underline" href="#">
+                * Berakhir pada {{ optional($event->expired_at)->format('d M Y') }}
+            </a>
+        </div>
 
-                    <a href="{{ route('pilih.tempat', ['event_id' => $event->id]) }}">
-                        <button class="bg-[#1A2EBF] text-white text-xs font-semibold rounded px-3 py-1" type="button">
-                            Buy Now
-                        </button>
-                    </a>
-                </div>
+        <div class="flex flex-col items-end gap-2 mt-2">
+            <!-- Quantity Selector -->
+            <div class="flex items-center gap-2">
+                <button type="button"
+                    class="w-7 h-7 flex items-center justify-center border border-gray-400 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-200 quantity-btn"
+                    data-action="decrease">−</button>
+                <span class="quantity text-sm font-semibold w-6 text-center select-none">1</span>
+                <button type="button"
+                    class="w-7 h-7 flex items-center justify-center border border-gray-400 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-200 quantity-btn"
+                    data-action="increase">+</button>
             </div>
 
-            <div class="absolute top-0 right-0 bg-[#1A2EBF] text-white text-[10px] font-semibold px-2 py-0.5 rounded-bl-lg select-none">
-                {{ strtoupper($ticket->zone) }}
-            </div>
-        </article>
+            <a href="{{ route('pilih.tempat', ['event_id' => $event->id]) }}">
+                <button class="bg-[#1A2EBF] text-white text-xs font-semibold rounded px-3 py-1 mt-2" type="button">
+                    Buy Now
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div class="absolute top-0 right-0 bg-[#1A2EBF] text-white text-[10px] font-semibold px-2 py-0.5 rounded-bl-lg select-none">
+        {{ strtoupper($ticket->zone) }}
+    </div>
+</article>
     @endforeach
 </section>
 
 {{-- Script JS (letakkan hanya 1x, di luar loop) --}}
 @push('scripts')
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.quantity-increase').forEach((btn) => {
-            btn.addEventListener('click', function () {
-                const qtySpan = this.parentElement.querySelector('.quantity');
-                let current = parseInt(qtySpan.innerText);
-                qtySpan.innerText = current + 1;
-            });
-        });
+  document.addEventListener("DOMContentLoaded", function () {
+    // Tombol quantity
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+      button.addEventListener('click', function () {
+        const parent = this.closest('.flex');
+        const display = parent.querySelector('.quantity');
+        let currentQty = parseInt(display.textContent);
 
-        document.querySelectorAll('.quantity-decrease').forEach((btn) => {
-            btn.addEventListener('click', function () {
-                const qtySpan = this.parentElement.querySelector('.quantity');
-                let current = parseInt(qtySpan.innerText);
-                if (current > 1) {
-                    qtySpan.innerText = current - 1;
-                }
-            });
-        });
+        if (this.dataset.action === 'increase') {
+          display.textContent = currentQty + 1;
+        } else if (this.dataset.action === 'decrease' && currentQty > 1) {
+          display.textContent = currentQty - 1;
+        }
+      });
     });
+  });
 </script>
 @endpush
 
 
 
     </div>
-
-
-
-
-  <!-- Script untuk tombol -->
-  <script>
-    const quantityEl = document.getElementById("quantity");
-    const quantityLabel = document.getElementById("quantityLabel");
-    const decrementBtn = document.getElementById("decrement");
-    const incrementBtn = document.getElementById("increment");
-
-    let quantity = 1;
-
-    decrementBtn.addEventListener("click", () => {
-      if (quantity > 1) {
-        quantity--;
-        quantityEl.textContent = quantity;
-        quantityLabel.textContent = quantity;
-      }
-    });
-
-    incrementBtn.addEventListener("click", () => {
-      quantity++;
-      quantityEl.textContent = quantity;
-      quantityLabel.textContent = quantity;
-    });
-  </script>
-  <!-- Ticket item 2 -->
-
 
   </main>
 

@@ -24,14 +24,6 @@
                 src="{{ asset('img/logo.png') }}" width="32" />
             <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
         </div>
-        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
-            <div class="relative w-full">
-                <input
-                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                    placeholder="Search by artist or event" type="text" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-            </div>
-        </div>
         <div class="flex items-center space-x-3 min-w-[180px] justify-end">
             <button class="text-white text-xl sm:hidden">
                 <i class="fas fa-bars"></i>
@@ -169,35 +161,47 @@
 </script>
 
     </nav>
-<main class="px-4 sm:px-10 py-8 flex-grow">
-  <div class="max-w-5xl mx-auto mb-4">
-    <h2 class="text-2xl font-bold text-black text-center">Transaction History</h2>
+<main class="px-4 sm:px-10 py-10 flex-grow font-sans bg-gradient-to-br from-blue-50 via-white to-white">
+  <div class="max-w-5xl mx-auto mb-8">
+    <h2 class="text-3xl font-extrabold text-center text-blue-900 tracking-tight">📜 Riwayat Transaksi</h2>
   </div>
-  <div class="max-w-5xl mx-auto bg-white rounded-2xl p-4 sm:p-8">
+
+  <div class="max-w-5xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-blue-100">
     <div class="overflow-x-auto rounded-2xl">
-     <table class="w-full border-collapse rounded-2xl text-sm text-black">
-      <thead>
-      </thead>
-      <tbody>
-     @foreach ($contents as $content)
-            <tr class="border-t border-gray-200">
-                <td class="py-3 px-3">{{ \Carbon\Carbon::parse($content->date)->format('d/m/Y') }}</td>
-                <td class="font-extrabold underline decoration-black underline-offset-4">
-                    {{ strtoupper($content->penyanyi) }} - {{ strtoupper($content->name) }}
-                </td>
-                <td class="py-3 px-3">{{ number_format($content->price, 0, ',', '.') }}</td>
-                <td>
- <span class="inline-block bg-[#63ED6385] text-[#0f7a0f] text-xs font-semibold px-3 py-1 rounded-md select-none">
-          Success
-         </span>                </td>
+      <table class="w-full text-sm text-gray-700">
+        <thead class="text-xs font-semibold bg-blue-100 text-blue-900 uppercase tracking-wide rounded-2xl">
+          <tr>
+            <th class="text-left px-4 py-3">Tanggal</th>
+            <th class="text-left px-4 py-3">Event</th>
+            <th class="text-left px-4 py-3">Harga</th>
+            <th class="text-left px-4 py-3">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          @foreach ($contents as $content)
+            <tr class="hover:bg-blue-50 transition-colors duration-200">
+              <td class="px-4 py-3 whitespace-nowrap">
+                {{ \Carbon\Carbon::parse($content->date)->format('d/m/Y') }}
+              </td>
+              <td class="px-4 py-3 font-bold text-blue-800 underline decoration-blue-800 underline-offset-4">
+                {{ strtoupper($content->penyanyi) }} - {{ strtoupper($content->name) }}
+              </td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                Rp {{ number_format($content->price, 0, ',', '.') }}
+              </td>
+              <td class="px-4 py-3">
+                <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                  ✔️ Success
+                </span>
+              </td>
             </tr>
-            @endforeach
-
-
-     </table>
+          @endforeach
+        </tbody>
+      </table>
     </div>
-   </div>
-  </main>
+  </div>
+</main>
+
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

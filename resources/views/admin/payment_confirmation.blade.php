@@ -61,7 +61,7 @@
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
+                    <li><a href="{{ route('admin.review3') }}" class="hover:underline">Review & Ratings</a></li>
 
                     <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
                    <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>
@@ -166,32 +166,42 @@
 
     </nav>
 
-<section class="max-w-6xl mx-auto mt-10">
-    <h2 class="text-2xl font-bold mb-6">Payment Confirmation</h2>
+<section class="max-w-6xl mx-auto mt-10 px-4">
+    <h2 class="text-3xl font-extrabold text-blue-900 mb-8 tracking-tight">💳 Payment Confirmation</h2>
 
     @foreach ($orders as $order)
-    <div class="border border-gray-300 rounded-lg p-4 mb-4 bg-white shadow-sm">
-        <div class="flex justify-between items-center">
-            <div>
-                <h3 class="font-semibold text-lg text-gray-800">{{ $order->ticket->event->name ?? 'Unknown Event' }}</h3>
-                <p class="text-sm text-gray-600">User ID: {{ $order->user_id }}</p>
-                <p class="text-sm text-gray-600">Total Harga: Rp {{ number_format($order->total_harga, 0, ',', '.') }}</p>
-                <p class="text-sm text-gray-600">Status:
-                    <span class="font-semibold {{ $order->status === 'accepted' ? 'text-green-600' : ($order->status === 'rejected' ? 'text-red-600' : 'text-yellow-600') }}">
+    <div class="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div class="flex justify-between items-start flex-wrap gap-4">
+            <!-- Detail Order -->
+            <div class="space-y-2 text-sm md:text-base">
+                <h3 class="font-bold text-lg text-gray-900">{{ $order->ticket->event->name ?? 'Unknown Event' }}</h3>
+                <p class="text-gray-600"><span class="font-medium">User ID:</span> {{ $order->user_id }}</p>
+                <p class="text-gray-600"><span class="font-medium">Total Harga:</span> Rp {{ number_format($order->total_harga, 0, ',', '.') }}</p>
+                <p class="text-gray-600">
+                    <span class="font-medium">Status:</span>
+                    <span class="font-bold
+                        {{ $order->status === 'accepted' ? 'text-green-600' : ($order->status === 'rejected' ? 'text-red-600' : 'text-yellow-500') }}">
                         {{ ucfirst($order->status ?? 'pending') }}
                     </span>
                 </p>
             </div>
 
+            <!-- Tombol Aksi -->
             @if ($order->status === null || $order->status === 'pending')
-            <div class="flex gap-2">
+            <div class="flex gap-3 mt-2 md:mt-0">
                 <form action="{{ route('admin.payment.accept', $order->id) }}" method="POST">
                     @csrf
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Accept</button>
+                    <button type="submit"
+                        class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
+                        <i class="fas fa-check-circle"></i> Accept
+                    </button>
                 </form>
                 <form action="{{ route('admin.payment.reject', $order->id) }}" method="POST">
                     @csrf
-                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Reject</button>
+                    <button type="submit"
+                        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
+                        <i class="fas fa-times-circle"></i> Reject
+                    </button>
                 </form>
             </div>
             @endif
@@ -200,7 +210,8 @@
     @endforeach
 </section>
 
-!-- Footer -->
+
+<!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">
       <!-- Navigasi Cepat -->

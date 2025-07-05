@@ -23,14 +23,6 @@
                 src="{{ asset('img/logo.png') }}" width="32" />
             <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
         </div>
-        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
-            <div class="relative w-full">
-                <input
-                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                    placeholder="Search by artist or event" type="text" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-            </div>
-        </div>
         <div class="flex items-center space-x-3 min-w-[180px] justify-end">
             <button class="text-white text-xl sm:hidden">
                 <i class="fas fa-bars"></i>
@@ -168,50 +160,99 @@
 </script>
 
     </nav>
-  <div class="overflow-x-auto shadow-lg rounded-lg">
-    <table class="min-w-full table-auto text-sm border border-gray-200 bg-white">
-        <thead class="bg-[#f3f4f6] text-gray-700 uppercase tracking-wider text-xs">
+<div class="overflow-x-auto shadow-xl rounded-2xl border border-gray-200 bg-white relative">
+    <table class="min-w-full table-auto text-sm">
+        <thead class="bg-gradient-to-r from-blue-50 to-blue-100 text-blue-900 uppercase text-xs font-semibold">
             <tr>
-                <th class="px-4 py-3 border">#</th>
-                <th class="px-4 py-3 border">User</th>
-                <th class="px-4 py-3 border">Title</th>
-                <th class="px-4 py-3 border">Review</th>
-                <th class="px-4 py-3 border">Rating</th>
-                <th class="px-4 py-3 border">Created At</th>
-                <th class="px-4 py-3 text-center border">Action</th>
+                <th class="px-5 py-3 text-left border-b">#</th>
+                <th class="px-5 py-3 text-left border-b">User</th>
+                <th class="px-5 py-3 text-left border-b">Title</th>
+                <th class="px-5 py-3 text-left border-b">Review</th>
+                <th class="px-5 py-3 text-left border-b">Rating</th>
+                <th class="px-5 py-3 text-left border-b">Created At</th>
+                <th class="px-5 py-3 text-center border-b">Action</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200 text-gray-800">
+        <tbody class="divide-y divide-gray-100 text-gray-700">
             @forelse($reviews as $review)
-                <tr class="hover:bg-gray-50 transition duration-200">
-                    <td class="px-4 py-3 border">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-3 border">{{ $review->user->name ?? 'Anonim' }}</td>
-                    <td class="px-4 py-3 border font-semibold text-blue-800">{{ $review->title }}</td>
-                    <td class="px-4 py-3 border break-words max-w-xs">{{ $review->body }}</td>
-                    <td class="px-4 py-3 border">
-                        <span class="inline-block px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-bold text-xs">
-                            {{ $review->rating }}
+                <tr class="hover:bg-blue-50 transition-all duration-200 ease-in-out">
+                    <td class="px-5 py-4">{{ $loop->iteration }}</td>
+                    <td class="px-5 py-4 font-medium">{{ $review->user->name ?? 'Anonim' }}</td>
+                    <td class="px-5 py-4 font-semibold text-blue-800">{{ $review->title }}</td>
+                    <td class="px-5 py-4 break-words max-w-xs text-gray-600">{{ $review->body }}</td>
+                    <td class="px-5 py-4">
+                        <span class="inline-block px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold text-xs shadow-sm">
+                            ⭐ {{ $review->rating }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 border">{{ $review->created_at->format('d M Y') }}</td>
-                    <td class="px-4 py-3 text-center border">
-                        <form action="{{ route('review.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus review ini?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-150 text-xs">
-                                <i class="fas fa-trash-alt"></i> Hapus
-                            </button>
-                        </form>
+                    <td class="px-5 py-4 text-gray-500">{{ $review->created_at->format('d M Y') }}</td>
+                    <td class="px-5 py-4 text-center">
+                        <button type="button"
+                            onclick="openDeleteModal('{{ route('review.destroy', $review->id) }}')"
+                            class="flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-full text-xs shadow-md transition-all duration-200">
+                            <i class="fas fa-trash-alt"></i> Hapus
+                        </button>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center px-6 py-4 text-gray-500">Tidak ada review ditemukan.</td>
+                    <td colspan="7" class="text-center px-6 py-6 text-gray-400 italic">Tidak ada review ditemukan.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white w-full max-w-md mx-auto rounded-xl shadow-2xl p-6 animate-fade-in border-t-4 border-blue-700">
+            <h2 class="text-lg font-bold text-blue-800 mb-2">Konfirmasi Penghapusan</h2>
+            <p class="text-sm text-gray-600">Apakah Anda yakin ingin menghapus review ini?</p>
+            <div class="flex justify-end gap-4 mt-6">
+                <!-- Tombol Batal -->
+                <button type="button" onclick="closeDeleteModal()"
+                    class="flex items-center justify-center w-20 h-10 rounded-full bg-gray-100 text-gray-800 font-semibold text-sm hover:bg-gray-200 transition">
+                    Batal
+                </button>
+
+                <!-- Form Hapus -->
+                <form id="deleteReviewForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="flex items-center justify-center gap-2 w-24 h-10 rounded-full bg-red-500 text-white font-semibold text-sm hover:bg-red-600 transition">
+                        <i class="fas fa-trash-alt"></i> Hapus
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Script Modal -->
+<script>
+    function openDeleteModal(actionUrl) {
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteReviewForm');
+
+        form.setAttribute('action', actionUrl);
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+</script>
+
+<!-- Animasi -->
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+</style>
 
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
