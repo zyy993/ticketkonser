@@ -48,8 +48,57 @@
         <a href="{{ route('home.tampil') }}" class="flex items-center py-2 px-4 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg transition">
           <span>Preview</span>
         </a>
+        <a href="#" id="logoutButton" class="flex items-center py-2 px-4 text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg transition">
+             <span>Logout</span>
+        </a>
       </nav>
     </div>
+
+     <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
+ <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
+                    <div class="flex justify-center space-x-4">
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
+                        <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+<script>
+
+    const logoutButton = document.getElementById('logoutButton');
+    const logoutForm = document.getElementById('logoutForm');
+    const logoutConfirmation = document.getElementById('logoutConfirmation');
+    const yesButton = document.querySelector('#logoutConfirmation button.bg-blue-500'); // tombol YES
+    const noButton = document.querySelector('#logoutConfirmation button.bg-gray-400'); // tombol NO
+
+     if (logoutButton && logoutConfirmation) {
+            logoutButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                logoutConfirmation.classList.remove('hidden');
+            });
+        }
+
+        // YES = Submit logout form
+        if (yesButton && logoutForm) {
+            yesButton.addEventListener('click', function () {
+                logoutForm.submit();
+            });
+        }
+
+        // NO = Close popup
+        if (noButton && logoutConfirmation) {
+            noButton.addEventListener('click', function () {
+                logoutConfirmation.classList.add('hidden');
+            });
+        }
+</script>
+
 
     <!-- Main Content -->
     <div class="flex-1 ml-0 md:ml-64 p-6 bg-gray-100">
@@ -72,7 +121,9 @@
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
           <p class="text-gray-500">Revenue</p>
-          <h2 class="text-3xl font-semibold text-green-600">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h2>
+         <h2 class="text-3xl font-semibold text-green-600">
+  Rp {{ number_format($totalRevenue, 0, ',', '.') }}
+</h2>
         </div>
         <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
           <p class="text-gray-500">Users</p>

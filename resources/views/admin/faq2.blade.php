@@ -33,22 +33,27 @@
                     <!-- Sidebar -->
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                     <div class="ml-4">
-    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-    <br>
-    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('user.editprofile') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
+
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
 </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+
 
                 <ul class="p-4 space-y-4 text-white ml-4">
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
@@ -182,11 +187,15 @@
     </button>
 </form>
 
-            <form action="{{ route('faq.delete', $faq->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-red-600 text-white px-3 py-1 text-sm rounded">Delete</button>
-            </form>
+<div>
+    <button onclick="openDeleteModal('{{ route('faq.delete', $faq->id) }}')" type="button"
+        class="inline-block bg-red-600 text-white px-3 py-1 text-sm rounded hover:bg-red-700 transition">
+        Delete
+    </button>
+</div>
+
+
+
         </div>
     </div>
     @endforeach
@@ -194,6 +203,56 @@
     <a href="{{ route('faq.create') }}" class="bg-blue-600 text-white px-4 py-2 text-sm rounded mb-4 inline-block">+ Tambah FAQ</a>
 
 </main>
+<!-- Modal Konfirmasi Hapus -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white w-full max-w-md mx-auto rounded-xl shadow-2xl p-6 animate-fade-in border-t-4 border-blue-700">
+        <h2 class="text-lg font-bold text-blue-800 mb-2">Konfirmasi Penghapusan</h2>
+        <p class="text-sm text-gray-600">Apakah Anda yakin ingin menghapus FAQ ini?</p>
+        <div class="flex justify-end gap-4 mt-6">
+            <!-- Tombol Batal -->
+            <button type="button" onclick="closeDeleteModal()"
+                class="flex items-center justify-center w-20 h-10 rounded-full bg-gray-100 text-gray-800 font-semibold text-sm hover:bg-gray-200 transition">
+                Batal
+            </button>
+
+            <!-- Form Hapus -->
+            <form id="deleteReviewForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="flex items-center justify-center gap-2 w-24 h-10 rounded-full bg-red-500 text-white font-semibold text-sm hover:bg-red-600 transition">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Script Modal -->
+<script>
+    function openDeleteModal(actionUrl) {
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteReviewForm');
+        form.setAttribute('action', actionUrl);
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+</script>
+
+<!-- Animasi -->
+<style>
+    @keyframes fade-in {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fade-in {
+        animation: fade-in 0.3s ease-out;
+    }
+</style>
+
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

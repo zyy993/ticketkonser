@@ -43,117 +43,117 @@
             <button id="sidebarToggle" class="text-white text-xl hidden sm:block focus:outline-none">
                 <i class="fas fa-chevron-down"></i>
             </button>
-            <!-- Sidebar -->
-            <div id="sidebar"
-                class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                    <div class="ml-4">
-                       <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-    <br>
-    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
-                    </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+             <!-- Sidebar -->
+        <div id="sidebar" class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('user.editprofile') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
 
-                <ul class="p-4 space-y-4 text-white ml-4">
-                    <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
+
+            <ul class="p-4 space-y-4 text-white ml-4">
+              <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
                     <li><a href="{{ route('user.shoppingbasket') }}" class="hover:underline">Shopping Basket</a></li>
-                    <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Transaction History</a></li>
+                    <li><a href="{{ route('riwayat.indext') }}" class="hover:underline">Transaction History</a></li>
 
                     <li><a href="{{ route('user.review1') }}" class="hover:underline">Reviews &amp; Ratings</a></li>
                     <li><a href="{{ route('user.faq1') }}" class="hover:underline">FAQ</a></li>
+                    <li>
                     </li>
-                   <li>
-  <a href="#" id="logoutButton" class="hover:underline">Logout</a>
+                    <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
+                    <div class="flex items-center">
+                        <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
+                            <!-- Optional Admin/Promotor Toggle -->
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-  <!-- Form logout tersembunyi -->
-  <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
+    </div>
+    <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
     @csrf
-  </form>
-</li>
+</form>
 
-                </ul>
-                <script>
-  document.getElementById('logoutButton').addEventListener('click', function (e) {
-    e.preventDefault();
-    document.getElementById('logoutForm').submit();
-  });
-</script>
+</nav>
 
+<!-- Popup for Logout Confirmation -->
+<div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
+            <div class="flex justify-center space-x-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
+                <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
             </div>
         </div>
-    </nav>
-            <!--popup-->
-            <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-                    <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
-                    <div class="flex justify-center space-x-4">
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
-                        <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-    <script>
-        // JavaScript to toggle the visibility of Admin and Promotor options
-        document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-            const adminPromotorList = document.getElementById('adminPromotorList');
-            adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
+    </div>
+</div>
+
+<script>
+    // JavaScript to toggle the visibility of Admin and Promotor options
+    document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const close = document.getElementById('closeSidebar');
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutConfirmation = document.getElementById('logoutConfirmation');
+        const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation.querySelector('.bg-gray-400');
+
+        toggle.addEventListener('click', () => {
+            sidebar.classList.remove('translate-x-full');
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const close = document.getElementById('closeSidebar');
-            const logoutButton = document.getElementById('logoutButton');
-            const logoutConfirmation = document.getElementById('logoutConfirmation');
-            const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-            const noButton = logoutConfirmation.querySelector('.bg-gray-400');
+        close.addEventListener('click', () => {
+            sidebar.classList.add('translate-x-full');
+        });
 
-            toggle.addEventListener('click', () => {
-                sidebar.classList.remove('translate-x-full');
-            });
+        // Show logout confirmation popup
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default action
+            logoutConfirmation.classList.remove('hidden'); // Show popup
+        });
 
-            close.addEventListener('click', () => {
+        // Handle YES button click
+        yesButton.addEventListener('click', () => {
+    document.getElementById('logoutForm').submit();
+});
+
+        // Handle NO button click
+        noButton.addEventListener('click', () => {
+            logoutConfirmation.classList.add('hidden'); // Hide popup
+        });
+
+        // Optional: close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
                 sidebar.classList.add('translate-x-full');
-            });
-
-            // Show logout confirmation popup
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                logoutConfirmation.classList.remove('hidden'); // Show popup
-            });
-
-            // Handle YES button click
-            yesButton.addEventListener('click', () => {
-                // Implement logout logic here
-                // For example, redirect to logout URL
-                window.location.href = '/logout'; // Change this to your logout URL
-            });
-
-            // Handle NO button click
-            noButton.addEventListener('click', () => {
-                logoutConfirmation.classList.add('hidden'); // Hide popup
-            });
-
-            // Optional: close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            });
+            }
         });
-    </script>
-    </nav>
+    });
+</script>
 
   <main class="max-w-7xl mx-auto p-4 sm:p-6 md:p-10">
   <div class="flex flex-col lg:flex-row gap-6">
@@ -260,48 +260,52 @@
 </div>
 
 
-    <div class="flex-1 p-3 flex flex-col justify-between">
-        <div>
-            <h2 class="font-semibold text-sm text-[#1A1A1A]">
-                {{ strtoupper($event->penyanyi) }} | {{ strtoupper($event->name) }}
-            </h2>
-            <ul class="text-xs text-[#4B4B4B] mt-1 space-y-1">
-                <li class="flex items-center gap-1">
-                    <i class="fas fa-map-marker-alt text-[#4B4B4B] text-[10px]"></i>
-                    <span>{{ $event->location }}</span>
-                </li>
-                <li class="flex items-center gap-1">
-                    <i class="fas fa-clock text-[#4B4B4B] text-[10px]"></i>
-                    <span>
-                        Gates open at {{ optional($event->gates_open)->format('H:i') ?? '-' }} |
-                        Show starts at {{ optional($event->show_starts)->format('H:i') ?? '-' }}
-                    </span>
-                </li>
-            </ul>
-            <a class="text-xs text-[#1A2EBF] mt-1 inline-block hover:underline" href="#">
-                * Berakhir pada {{ optional($event->expired_at)->format('d M Y') }}
-            </a>
-        </div>
-
-        <div class="flex flex-col items-end gap-2 mt-2">
-            <!-- Quantity Selector -->
-            <div class="flex items-center gap-2">
-                <button type="button"
-                    class="w-7 h-7 flex items-center justify-center border border-gray-400 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-200 quantity-btn"
-                    data-action="decrease">−</button>
-                <span class="quantity text-sm font-semibold w-6 text-center select-none">1</span>
-                <button type="button"
-                    class="w-7 h-7 flex items-center justify-center border border-gray-400 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-200 quantity-btn"
-                    data-action="increase">+</button>
-            </div>
-
-            <a href="{{ route('pilih.tempat', ['event_id' => $event->id]) }}">
-                <button class="bg-[#1A2EBF] text-white text-xs font-semibold rounded px-3 py-1 mt-2" type="button">
-                    Buy Now
-                </button>
-            </a>
-        </div>
+   <div class="flex-1 p-3 flex flex-col justify-between">
+    <div>
+        <h2 class="font-semibold text-sm text-[#1A1A1A]">
+            {{ strtoupper($event->penyanyi) }} | {{ strtoupper($event->name) }}
+        </h2>
+        <ul class="text-xs text-[#4B4B4B] mt-1 space-y-1">
+            <li class="flex items-center gap-1">
+                <i class="fas fa-map-marker-alt text-[#4B4B4B] text-[10px]"></i>
+                <span>{{ $event->location }}</span>
+            </li>
+            <li class="flex items-center gap-1">
+                <i class="fas fa-clock text-[#4B4B4B] text-[10px]"></i>
+                <span>
+                    Gates open at {{ optional($event->gates_open)->format('H:i') ?? '-' }} |
+                    Show starts at {{ optional($event->show_starts)->format('H:i') ?? '-' }}
+                </span>
+            </li>
+        </ul>
+        <a class="text-xs text-[#1A2EBF] mt-1 inline-block hover:underline" href="#">
+            * Berakhir pada {{ optional($event->expired_at)->format('d M Y') }}
+        </a>
     </div>
+
+    <form action="{{ route('pilih.tempat', ['event_id' => $event->id]) }}" method="GET" class="flex flex-col items-end gap-2 mt-2">
+        <!-- Quantity Selector -->
+        <div class="flex items-center gap-2">
+            <button type="button"
+                class="w-7 h-7 flex items-center justify-center border border-gray-400 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-200 quantity-btn"
+                data-action="decrease">−</button>
+
+            <span class="quantity text-sm font-semibold w-6 text-center select-none">1</span>
+
+            <button type="button"
+                class="w-7 h-7 flex items-center justify-center border border-gray-400 rounded-full text-sm font-bold text-gray-700 hover:bg-gray-200 quantity-btn"
+                data-action="increase">+</button>
+        </div>
+
+        <!-- Hidden input untuk dikirim -->
+        <input type="hidden" name="quantity" class="quantity-input" value="1">
+
+        <!-- Tombol submit -->
+        <button type="submit" class="bg-[#1A2EBF] text-white text-xs font-semibold rounded px-3 py-1 mt-2">
+            Buy Now
+        </button>
+    </form>
+</div>
 
     <div class="absolute top-0 right-0 bg-[#1A2EBF] text-white text-[10px] font-semibold px-2 py-0.5 rounded-bl-lg select-none">
         {{ strtoupper($ticket->zone) }}
@@ -311,26 +315,31 @@
 </section>
 
 {{-- Script JS (letakkan hanya 1x, di luar loop) --}}
-@push('scripts')
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // Tombol quantity
     document.querySelectorAll('.quantity-btn').forEach(button => {
       button.addEventListener('click', function () {
-        const parent = this.closest('.flex');
-        const display = parent.querySelector('.quantity');
+        const form = this.closest('form');
+        const display = form.querySelector('.quantity');
+        const input = form.querySelector('.quantity-input');
         let currentQty = parseInt(display.textContent);
 
         if (this.dataset.action === 'increase') {
-          display.textContent = currentQty + 1;
+          currentQty += 1;
         } else if (this.dataset.action === 'decrease' && currentQty > 1) {
-          display.textContent = currentQty - 1;
+          currentQty -= 1;
         }
+
+        display.textContent = currentQty;
+        input.value = currentQty;
       });
     });
   });
+
+
 </script>
-@endpush
+
 
 
 

@@ -42,23 +42,27 @@
 
         <!-- Sidebar -->
         <div id="sidebar" class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-            <div class="flex items-center justify-start px-4 py-3 border-b">
-                 <a href="{{ route('user.editprofile') }}">
-               <img
-  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
-  alt="User avatar"
-  class="w-10 h-10 rounded-full object-cover bg-white"
-/>
-                </a>
-                <div class="ml-4">
-                    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-                    <br>
-                    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
-                </div>
-                <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('user.editprofile') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
+
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
 
             <ul class="p-4 space-y-4 text-white ml-4">
               <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
@@ -157,82 +161,94 @@
   <h2 class="font-bold text-lg mb-2">Payment in progress</h2>
 
   @forelse ($orders as $order)
-  <div class="relative flex flex-col sm:flex-row bg-blue-50 border border-blue-200 rounded-md p-3 sm:p-4 mb-4">
-    <div class="absolute top-3 right-3 text-gray-500 select-none font-semibold-custom-strong date-text">
-      {{ \Carbon\Carbon::parse($order->created_at)->format('Y.m.d') }}
+    @php
+      $qty = $order->quantity ?? 1;
+      $listPrice = ($order->harga_tiket + $order->harga_seat) * $qty;
+      $tax = $listPrice * 0.15;
+      $grandTotal = $listPrice + $tax;
+    @endphp
 
-      <span class="text-xs font-bold {{ $order->status === 'accepted' ? 'text-green-600' : ($order->status === 'rejected' ? 'text-red-600' : 'text-yellow-600') }}">
-  {{ ucfirst($order->status) }}
-</span>
-    </div>
-
-    <div class="flex-shrink-0 mb-3 sm:mb-0 sm:mr-4">
-      <img
-        alt="{{ $order->ticket->event->name ?? 'Event' }}"
-        class="rounded"
-        height="90"
-        width="120"
-        src="{{ $order->ticket->event->image_path ? asset('storage/' . $order->ticket->event->image_path) : 'https://via.placeholder.com/120x90.png?text=No+Image' }}"
-      />
-    </div>
-
-    <div class="flex-1 flex flex-col justify-between">
-      <div>
-        <h3 class="font-extrabold text-sm sm:text-base leading-tight max-w-[60%]">
-          {{ $order->ticket->event->name ?? 'Event Name' }}
-        </h3>
-
-        <table class="w-[400px] max-w-full text-xs text-gray-600 mt-1 table-fixed border-collapse">
-          <tbody>
-            <tr class="border-b border-gray-300">
-              <td class="w-1/3 py-0.5 font-semibold-custom">List Price</td>
-              <td class="w-2/3 text-right py-0.5 font-semibold-custom">
-                Rp{{ number_format($order->harga_tiket, 0, ',', '.') }}
-              </td>
-            </tr>
-            <tr class="border-b border-gray-300">
-              <td class="py-0.5 font-semibold-custom">Tax (15%)</td>
-              <td class="text-right py-0.5 font-semibold-custom">
-                Rp{{ number_format($order->harga_tiket * 0.15, 0, ',', '.') }}
-              </td>
-            </tr>
-            <tr class="border-b border-gray-300">
-              <td class="py-0.5 font-semibold-custom">Total</td>
-              <td class="text-right py-0.5 font-semibold-custom">
-                Rp{{ number_format($order->total_harga + ($order->harga_tiket * 0.15), 0, ',', '.') }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p class="text-[9px] font-semibold-custom mt-1">
-          Payment Code : <span class="font-normal">{{ str_pad($order->id, 11, '0', STR_PAD_LEFT) }}</span>
-        </p>
-        <p class="text-[9px] text-blue-600 mt-0.5 font-semibold-custom">
-          *Berakhir pada {{ \Carbon\Carbon::parse($order->created_at)->addDays(3)->translatedFormat('d F Y') }}
-        </p>
+    <div class="relative flex flex-col sm:flex-row bg-blue-50 border border-blue-200 rounded-md p-3 sm:p-4 mb-4">
+      <div class="absolute top-3 right-3 text-gray-500 select-none font-semibold-custom-strong date-text">
+        {{ \Carbon\Carbon::parse($order->created_at)->format('Y.m.d') }}
+        <span class="text-xs font-bold {{ $order->status === 'accepted' ? 'text-green-600' : ($order->status === 'rejected' ? 'text-red-600' : 'text-yellow-600') }}">
+          {{ ucfirst($order->status) }}
+        </span>
       </div>
 
-      <div class="flex flex-col items-end mt-2 space-y-1">
-  @if ($order->status === 'accepted')
-    <a href="{{ route('ticket.download', ['order_id' => $order->id]) }}">
-      <button class="bg-green-600 hover:bg-green-700 text-white text-xs px-4 py-1 rounded font-semibold">
-        🎟 Download Ticket
-      </button>
-    </a>
-  @elseif ($order->status === 'rejected')
-    <p class="text-[9px] italic text-red-500 font-semibold-custom">
-      Your order has been rejected.
-    </p>
-  @else
-    <p class="text-[9px] italic text-gray-600 font-semibold-custom">
-      Please make the payment before 59.00
-    </p>
-  @endif
-</div>
+      <div class="flex-shrink-0 mb-3 sm:mb-0 sm:mr-4">
+        <img
+          alt="{{ $order->ticket->event->name ?? 'Event' }}"
+          class="rounded"
+          height="90"
+          width="120"
+          src="{{ $order->ticket->event->image_path ? asset('storage/' . $order->ticket->event->image_path) : 'https://via.placeholder.com/120x90.png?text=No+Image' }}"
+        />
+      </div>
 
+      <div class="flex-1 flex flex-col justify-between">
+        <div>
+          <h3 class="font-extrabold text-sm sm:text-base leading-tight max-w-[60%]">
+            {{ $order->ticket->event->name ?? 'Event Name' }}
+          </h3>
+
+          <table class="w-[400px] max-w-full text-xs text-gray-600 mt-1 table-fixed border-collapse">
+            <tbody>
+              <tr class="border-b border-gray-300">
+                <td class="py-0.5 font-semibold-custom">Qty</td>
+                <td class="text-right py-0.5 font-semibold-custom">
+                  {{ $qty }} Tiket
+                </td>
+              </tr>
+              <tr class="border-b border-gray-300">
+                <td class="w-1/3 py-0.5 font-semibold-custom">List Price</td>
+                <td class="w-2/3 text-right py-0.5 font-semibold-custom">
+                  Rp{{ number_format($listPrice, 0, ',', '.') }}
+                </td>
+              </tr>
+              <tr class="border-b border-gray-300">
+                <td class="py-0.5 font-semibold-custom">Tax (15%)</td>
+                <td class="text-right py-0.5 font-semibold-custom">
+                  Rp{{ number_format($tax, 0, ',', '.') }}
+                </td>
+              </tr>
+              <tr class="border-b border-gray-300">
+                <td class="py-0.5 font-semibold-custom">Total</td>
+                <td class="text-right py-0.5 font-semibold-custom">
+                  Rp{{ number_format($grandTotal, 0, ',', '.') }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="text-[9px] font-semibold-custom mt-1">
+            Payment Code : <span class="font-normal">{{ str_pad($order->id, 11, '0', STR_PAD_LEFT) }}</span>
+          </p>
+          <p class="text-[9px] text-blue-600 mt-0.5 font-semibold-custom">
+            *Berakhir pada {{ \Carbon\Carbon::parse($order->created_at)->addDays(3)->translatedFormat('d F Y') }}
+          </p>
+        </div>
+
+        <div class="flex flex-col items-end mt-2 space-y-1">
+          @if ($order->status === 'accepted')
+            <a href="{{ route('ticket.download', ['order_id' => $order->id]) }}">
+              <button class="bg-green-600 hover:bg-green-700 text-white text-xs px-4 py-1 rounded font-semibold">
+                🎟 Download Ticket
+              </button>
+            </a>
+          @elseif ($order->status === 'rejected')
+            <p class="text-[9px] italic text-red-500 font-semibold-custom">
+              Your order has been rejected.
+            </p>
+          @else
+            <p class="text-[9px] italic text-gray-600 font-semibold-custom">
+              Please make the payment before 59.00
+            </p>
+          @endif
+        </div>
+
+      </div>
     </div>
-  </div>
   @empty
     <p class="text-sm text-gray-500">You have no pending orders.</p>
   @endforelse

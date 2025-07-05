@@ -128,7 +128,7 @@ class HomeController extends Controller
 
     public function tampilriwayat()
     {
-        $contents = Home::all();
+        $contents = TicketOrder::all();
         return view('user.riwayattransaksi1', compact('contents'));
     }
 
@@ -156,6 +156,7 @@ public function tampilInfo3($event_id)
                 'zone'         => $zone['zone'],
                 'harga'        => $zone['harga'],
                 'seat_number'  => $zone['seat_number'],
+
                 'status'       => 'available',
             ]);
         }
@@ -169,10 +170,10 @@ public function tampilInfo3($event_id)
 
 
 
-
-  public function pilihTempat($event_id)
+public function pilihTempat(Request $request, $event_id)
 {
     $event = Home::findOrFail($event_id);
+    $quantity = $request->input('quantity', 1); // default = 1 jika tidak dikirim
 
     // 🔍 Cek apakah tiket sudah ada
     $ticketCount = TicketType::where('home_id', $event_id)->count();
@@ -192,6 +193,7 @@ public function tampilInfo3($event_id)
                 'home_id'     => $event_id,
                 'jenis_tiket' => $data['jenis_tiket'],
                 'zone'        => $data['zone'],
+                'quantity'=>$data['quantity'],
                 'harga'       => $data['harga'],
                 'seat_number' => $data['seat_number'],
                 'status'      => 'available',
@@ -202,7 +204,7 @@ public function tampilInfo3($event_id)
     // ✅ Ambil ulang data ticket setelah create (jika ada)
     $tickets = TicketType::where('home_id', $event_id)->get();
 
-    return view('user.pilihtempat', compact('event', 'tickets'));
+    return view('user.pilihtempat', compact('event', 'tickets', 'quantity'));
 }
 
     public function simpanPilihTempat(Request $request)
@@ -211,6 +213,7 @@ public function tampilInfo3($event_id)
             'ticket_id'  => 'required|exists:ticket_types,id',
             'seat_name'  => 'required|string|max:255',
             'harga_seat' => 'required|numeric|min:0',
+            'quantity'   => 'required|integer|min:1'
         ]);
 
         $ticket = TicketType::with('event')->findOrFail($request->ticket_id);
@@ -224,24 +227,32 @@ public function tampilInfo3($event_id)
             'harga_tiket'  => $hargaTiket,
             'harga_seat'   => $request->harga_seat,
             'total_harga'  => $total,
+            'quantity'     => $request->quantity,
         ]);
 
         return redirect()->route('user.eticket')->with('success', 'Tempat berhasil dipilih!');
     }
 
+
+
+
+
     public function tampilETicket()
-    {
-        $order = TicketOrder::where('user_id', auth()->id())
-            ->with(['ticket.event'])
-            ->latest()
-            ->first();
+{
+    $order = TicketOrder::where('user_id', auth()->id())
+        ->with(['ticket.event'])
+        ->latest()
+        ->first();
 
-        $tax = 2000;
-        $subtotal = $order->harga_tiket + $order->harga_seat;
-        $total = $subtotal + $tax;
+    $quantity = $order->quantity ?? 1;
 
-        return view('user.eticket', compact('order', 'subtotal', 'tax', 'total'));
-    }
+    $subtotal = ($order->harga_tiket + $order->harga_seat) * $quantity;
+    $tax = 2000; // atau bisa juga persentase: round($subtotal * 0.1);
+    $total = $subtotal + $tax;
+
+    return view('user.eticket', compact('order', 'quantity', 'subtotal', 'tax', 'total'));
+}
+
 
     public function Jumlahtampil()
     {
@@ -249,7 +260,7 @@ public function tampilInfo3($event_id)
         $totalUsers = User::count();
         $ticketsSold = TicketOrder::count();
         $latestOrders = TicketOrder::with(['ticket.event', 'user'])->latest()->take(5)->get();
-        $totalRevenue = TicketOrder::sum('total_harga');
+$totalRevenue = TicketOrder::selectRaw('SUM(total_harga * quantity) as revenue')->value('revenue');
 
         return view('promotor.dashboard', compact('totalEvents', 'totalUsers', 'latestOrders', 'ticketsSold', 'totalRevenue'));
     }
@@ -304,51 +315,58 @@ public function tampilInfo3($event_id)
 
 public function dashboard()
 {
-    // 1. Ambil konser yang status aktif
-   // Ambil ID konser yang aktif
-$konserAktifIds = Home::where('status', 'aktif')->pluck('id');
+    // 1. Ambil ID konser yang status-nya aktif
+    $konserAktifIds = Home::where('status', 'aktif')->pluck('id');
 
-// Ambil ticket_id dari ticket_types berdasarkan konser aktif
-$ticketIds = TicketType::whereIn('home_id', $konserAktifIds)->pluck('id');
+    // 2. Ambil ticket_id berdasarkan konser aktif
+    $ticketIds = TicketType::whereIn('home_id', $konserAktifIds)->pluck('id');
 
-// Hitung jumlah tiket terjual dari ticket_orders yang memiliki ticket aktif
-$tiketTerjual = TicketOrder::whereIn('ticket_id', $ticketIds)->count();
+    // 3. Hitung jumlah tiket terjual dari order berdasarkan tiket aktif
+    $tiketTerjual = TicketOrder::whereIn('ticket_id', $ticketIds)->count();
 
-// Hitung total pendapatan
-$totalPendapatan = TicketOrder::whereIn('ticket_id', $ticketIds)->sum('total_harga');
+    // 4. Hitung total pendapatan dari tiket yang dibeli
+    $totalPendapatan = TicketOrder::whereIn('ticket_id', $ticketIds)
+    ->sum(DB::raw('total_harga * IFNULL(quantity, 1)'));
 
-// Hitung jumlah konser aktif
-$jumlahKonserAktif = $konserAktifIds->count();
 
- $penjualanPerHari = TicketOrder::selectRaw('DATE(created_at) as tanggal, COUNT(*) as total')
+    // 5. Hitung jumlah konser aktif
+    $jumlahKonserAktif = $konserAktifIds->count();
+
+    // 6. Ambil data penjualan per hari (limit 10 hari terakhir)
+    $penjualanPerHari = TicketOrder::whereIn('ticket_id', $ticketIds)
+        ->selectRaw('DATE(created_at) as tanggal, COUNT(*) as total')
         ->groupBy('tanggal')
         ->orderBy('tanggal', 'asc')
         ->limit(10)
         ->get();
 
-    // Siapkan koordinat grafik
+    // 7. Siapkan koordinat (untuk visualisasi SVG atau Canvas manual)
     $startX = 100;
     $stepX = 110;
     $yBase = 390;
-    $scale = 1; // 1 tiket = 1px naik
+    $scale = 1;
 
     $dataPoints = [];
     foreach ($penjualanPerHari as $index => $data) {
         $x = $startX + $index * $stepX;
-        $y = $yBase - ($data->total * $scale); // Semakin banyak tiket, semakin naik
+        $y = $yBase - ($data->total * $scale);
 
         $dataPoints[] = [
             'tanggal' => $data->tanggal,
-            'x' => $x,
-            'y' => max($y, 40), // jangan lebih dari batas atas (opsional)
-            'total' => $data->total
+            'x'       => $x,
+            'y'       => max($y, 40),
+            'total'   => $data->total
         ];
     }
 
-
-return view('admin.haladmin', compact('jumlahKonserAktif', 'tiketTerjual', 'totalPendapatan', 'dataPoints'));
-
+    return view('admin.haladmin', compact(
+        'jumlahKonserAktif',
+        'tiketTerjual',
+        'totalPendapatan',
+        'dataPoints'
+    ));
 }
+
 
 public function downloadTicket($order_id)
 {

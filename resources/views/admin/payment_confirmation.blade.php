@@ -40,22 +40,27 @@
                       <!-- Sidebar -->
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                     <div class="ml-4">
-    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-    <br>
-    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('user.editprofile') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
+
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
 </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+
 
                 <ul class="p-4 space-y-4 text-white ml-4">
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
@@ -170,46 +175,55 @@
     <h2 class="text-3xl font-extrabold text-blue-900 mb-8 tracking-tight">💳 Payment Confirmation</h2>
 
     @foreach ($orders as $order)
-    <div class="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-        <div class="flex justify-between items-start flex-wrap gap-4">
-            <!-- Detail Order -->
-            <div class="space-y-2 text-sm md:text-base">
-                <h3 class="font-bold text-lg text-gray-900">{{ $order->ticket->event->name ?? 'Unknown Event' }}</h3>
-                <p class="text-gray-600"><span class="font-medium">User ID:</span> {{ $order->user_id }}</p>
-                <p class="text-gray-600"><span class="font-medium">Total Harga:</span> Rp {{ number_format($order->total_harga, 0, ',', '.') }}</p>
-                <p class="text-gray-600">
-                    <span class="font-medium">Status:</span>
-                    <span class="font-bold
-                        {{ $order->status === 'accepted' ? 'text-green-600' : ($order->status === 'rejected' ? 'text-red-600' : 'text-yellow-500') }}">
-                        {{ ucfirst($order->status ?? 'pending') }}
-                    </span>
-                </p>
-            </div>
+        @php
+            $qty = $order->quantity ?? 1;
+            $baseTotal = $order->total_harga * $qty;
+            $tax = $baseTotal * 0.15;
+            $grandTotal = $baseTotal + $tax;
+        @endphp
 
-            <!-- Tombol Aksi -->
-            @if ($order->status === null || $order->status === 'pending')
-            <div class="flex gap-3 mt-2 md:mt-0">
-                <form action="{{ route('admin.payment.accept', $order->id) }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
-                        <i class="fas fa-check-circle"></i> Accept
-                    </button>
-                </form>
-                <form action="{{ route('admin.payment.reject', $order->id) }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
-                        <i class="fas fa-times-circle"></i> Reject
-                    </button>
-                </form>
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div class="flex justify-between items-start flex-wrap gap-4">
+                <!-- Detail Order -->
+                <div class="space-y-2 text-sm md:text-base">
+                    <h3 class="font-bold text-lg text-gray-900">{{ $order->ticket->event->name ?? 'Unknown Event' }}</h3>
+                    <p class="text-gray-600"><span class="font-medium">User ID:</span> {{ $order->user_id }}</p>
+                    <p class="text-gray-600"><span class="font-medium">Jumlah Tiket:</span> {{ $qty }}</p>
+                    <p class="text-gray-600"><span class="font-medium">Total Harga (x{{ $qty }}):</span> Rp {{ number_format($baseTotal, 0, ',', '.') }}</p>
+                    <p class="text-gray-600"><span class="font-medium">Pajak (15%):</span> Rp {{ number_format($tax, 0, ',', '.') }}</p>
+                    <p class="text-gray-800 font-semibold"><span class="font-medium">Grand Total:</span> Rp {{ number_format($grandTotal, 0, ',', '.') }}</p>
+                    <p class="text-gray-600">
+                        <span class="font-medium">Status:</span>
+                        <span class="font-bold
+                            {{ $order->status === 'accepted' ? 'text-green-600' : ($order->status === 'rejected' ? 'text-red-600' : 'text-yellow-500') }}">
+                            {{ ucfirst($order->status ?? 'pending') }}
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Tombol Aksi -->
+                @if ($order->status === null || $order->status === 'pending')
+                    <div class="flex gap-3 mt-2 md:mt-0">
+                        <form action="{{ route('admin.payment.accept', $order->id) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
+                                <i class="fas fa-check-circle"></i> Accept
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.payment.reject', $order->id) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
+                                <i class="fas fa-times-circle"></i> Reject
+                            </button>
+                        </form>
+                    </div>
+                @endif
             </div>
-            @endif
         </div>
-    </div>
     @endforeach
 </section>
-
 
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">

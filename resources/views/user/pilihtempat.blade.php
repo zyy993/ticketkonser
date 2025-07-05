@@ -324,7 +324,7 @@
                  onclick="selectSeat(this, 'ZONE C')">ZONE C</div>
 
 
-            
+
         </div>
 
         <!-- RIGHT ZONES -->
@@ -353,6 +353,7 @@
         <input type="hidden" name="ticket_id" id="selected_ticket_id">
         <input type="hidden" name="seat_name" id="selected_seat_name">
         <input type="hidden" name="harga_seat" id="selected_harga">
+        <input type="hidden" name="quantity" value="{{ $quantity }}"> 
 
         <button id="selectSeatButton" type="submit"
                 class="bg-blue-500 text-white py-2 px-6 rounded shadow-md transition hover:bg-blue-600"

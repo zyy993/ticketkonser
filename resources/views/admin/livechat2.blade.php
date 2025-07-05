@@ -34,22 +34,27 @@
                      <!-- Sidebar -->
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                     <div class="ml-4">
-    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-    <br>
-    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('user.editprofile') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
+
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
 </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+
 
                 <ul class="p-4 space-y-4 text-white ml-4">
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>

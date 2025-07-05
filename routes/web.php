@@ -250,14 +250,16 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
 
 
+
 Route::prefix('dashboard/horizon')->name('horizon.')->group(function () {
-    Route::get('/', [HorizonController::class, 'index'])->name('index'); // tampilkan semua data
-    Route::get('/create', [HorizonController::class, 'create'])->name('create'); // form create
-    Route::post('/', [HorizonController::class, 'store'])->name('store'); // simpan data baru
-    Route::get('/{id}/edit', [HorizonController::class, 'edit'])->name('edit'); // form edit
-    Route::put('/{id}', [HorizonController::class, 'update'])->name('update'); // simpan update
-    Route::delete('/{id}', [HorizonController::class, 'destroy'])->name('destroy'); // hapus data
+    Route::get('/', [HorizonController::class, 'index'])->name('index');         // Tampilkan semua event
+    Route::get('/create', [HorizonController::class, 'create'])->name('create'); // Form tambah event
+    Route::post('/', [HorizonController::class, 'store'])->name('store');        // Simpan event baru
+    Route::get('/{horizon}/edit', [HorizonController::class, 'edit'])->name('edit');   // Form edit
+    Route::put('/{horizon}', [HorizonController::class, 'update'])->name('update');    // Simpan update event
+    Route::delete('/{horizon}', [HorizonController::class, 'destroy'])->name('destroy'); // Hapus event
 });
+
 Route::get('/dashboard/moment/create', [MomentController::class, 'create'])->name('moment.create');
 Route::post('/dashboard/moment', [MomentController::class, 'store'])->name('moment.store');
 
@@ -284,8 +286,10 @@ Route::get('/pilihtempat/{event_id}', [HomeController::class, 'pilihTempat'])->n
 // Untuk tampil daftar semua event (tanpa pilih kursi)
 Route::get('/pilihtempat', [HomeController::class, 'tampilPilihTempat'])->name('pilih.tempat.index');
 
+
 // Simpan hasil pilih tempat
-Route::post('/pilihtempat', [HomeController::class, 'simpanPilihTempat'])->name('pilih.tempat.submit');
+Route::post('/pilihtempat/simpan', [HomeController::class, 'simpanPilihTempat'])->name('pilih.tempat.submit');
+
 
 Route::get('/shopping-basket', [HomeController::class, 'tampilShoppingBasket'])
     ->middleware('auth')

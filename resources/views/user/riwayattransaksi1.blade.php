@@ -34,23 +34,27 @@
             <!-- Sidebar -->
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                     <a href="{{ route('user.editprofile') }}">
-               <img
-  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
-  alt="User avatar"
-  class="w-10 h-10 rounded-full object-cover bg-white"
-/>
-                </a>
-                     <div class="ml-4">
-    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-    <br>
-    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('user.editprofile') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
+
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
 </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+
 
                 <ul class="p-4 space-y-4 text-white ml-4">
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
@@ -169,33 +173,51 @@
   <div class="max-w-5xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-blue-100">
     <div class="overflow-x-auto rounded-2xl">
       <table class="w-full text-sm text-gray-700">
-        <thead class="text-xs font-semibold bg-blue-100 text-blue-900 uppercase tracking-wide rounded-2xl">
+        <thead class="text-xs font-semibold bg-blue-100 text-blue-900 uppercase tracking-wide">
           <tr>
             <th class="text-left px-4 py-3">Tanggal</th>
-            <th class="text-left px-4 py-3">Event</th>
             <th class="text-left px-4 py-3">Harga</th>
             <th class="text-left px-4 py-3">Status</th>
+            <th class="text-left px-4 py-3">User</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          @foreach ($contents as $content)
+          @forelse ($contents as $content)
+            @php
+              $quantity = $content->quantity ?? 1;
+              $totalHarga = $content->total_harga * $quantity;
+
+              $status = strtolower($content->status ?? 'pending');
+              $badge = match($status) {
+                'accepted' => ['✔️ Success', 'bg-green-100 text-green-700'],
+                'pending' => ['⌛ Pending', 'bg-yellow-100 text-yellow-700'],
+                'rejected' => ['❌ Rejected', 'bg-red-100 text-red-700'],
+                default => ['⚠️ Unknown', 'bg-gray-100 text-gray-700'],
+              };
+            @endphp
+
             <tr class="hover:bg-blue-50 transition-colors duration-200">
               <td class="px-4 py-3 whitespace-nowrap">
-                {{ \Carbon\Carbon::parse($content->date)->format('d/m/Y') }}
-              </td>
-              <td class="px-4 py-3 font-bold text-blue-800 underline decoration-blue-800 underline-offset-4">
-                {{ strtoupper($content->penyanyi) }} - {{ strtoupper($content->name) }}
+                {{ \Carbon\Carbon::parse($content->created_at)->format('d/m/Y') }}
               </td>
               <td class="px-4 py-3 whitespace-nowrap">
-                Rp {{ number_format($content->price, 0, ',', '.') }}
+                Rp{{ number_format($totalHarga, 0, ',', '.') }}
               </td>
-              <td class="px-4 py-3">
-                <span class="inline-block bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
-                  ✔️ Success
+              <td class="px-4 py-3 whitespace-nowrap">
+                <span class="inline-block {{ $badge[1] }} text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                  {{ $badge[0] }}
                 </span>
               </td>
+              <td class="px-4 py-3 whitespace-nowrap">
+                {{ $content->user->name ?? 'User Tidak Diketahui' }}<br>
+                <span class="text-xs text-gray-500">ID: {{ $content->user->id ?? '-' }}</span>
+              </td>
             </tr>
-          @endforeach
+          @empty
+            <tr>
+              <td colspan="4" class="text-center py-6 text-gray-500">Tidak ada transaksi ditemukan.</td>
+            </tr>
+          @endforelse
         </tbody>
       </table>
     </div>

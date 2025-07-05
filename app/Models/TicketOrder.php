@@ -14,6 +14,7 @@ class TicketOrder extends Model
         'ticket_id',
         'seat_name',
         'harga_tiket',
+        'quantity',
         'harga_seat',
         'total_harga',
     ];
@@ -30,5 +31,5 @@ class TicketOrder extends Model
         return $this->belongsTo(TicketType::class, 'ticket_id');
     }
 
-    
+
 }

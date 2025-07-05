@@ -12,6 +12,13 @@
         }
     </style>
 </head>
+@php
+    $quantity = $order->quantity ?? 1;
+    $subtotal = $order->total_harga * $quantity;
+    $tax = $subtotal * 0.15;
+    $grandTotal = $subtotal + $tax;
+@endphp
+
 <body class="bg-gradient-to-b from-blue-50 to-white p-8 min-h-screen">
     <div class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-xl border border-blue-200 transition-all">
         <h1 class="text-2xl font-bold text-center mb-6 text-blue-800 tracking-wide">🎫 E-TICKET</h1>
@@ -37,22 +44,28 @@
 
             <hr class="border-gray-300 my-4">
 
+
             <div><span class="font-semibold">🪑 Zona:</span> {{ strtoupper($order->ticket->zone) }}</div>
             <div><span class="font-semibold">💺 Seat Number:</span> {{ $order->ticket->seat_number }}</div>
-            <div><span class="font-semibold">💸 Harga Tiket:</span> Rp{{ number_format($order->total_harga + ($order->harga_tiket * 0.15), 0, ',', '.') }}</div>
+            <div><span class="font-semibold">🎟️ Jumlah Tiket:</span> {{ $quantity }}</div>
+            <div><span class="font-semibold">💸 Subtotal:</span> Rp{{ number_format($subtotal, 0, ',', '.') }}</div>
+            <div><span class="font-semibold">🧾 Pajak (15%):</span> Rp{{ number_format($tax, 0, ',', '.') }}</div>
+            <div><span class="font-semibold">🧮 Total Bayar:</span> <span class="text-blue-800 font-bold">Rp{{ number_format($grandTotal, 0, ',', '.') }}</span></div>
+
             <div>
                 <span class="font-semibold">📌 Status:</span>
                 <span class="{{ $order->status === 'accepted' ? 'text-green-600 font-bold' : 'text-yellow-600 font-semibold' }}">
                     {{ ucfirst($order->status) }}
                 </span>
             </div>
+
             <div><span class="font-semibold">🔑 Kode Pembayaran:</span> {{ str_pad($order->id, 11, '0', STR_PAD_LEFT) }}</div>
         </div>
 
         {{-- QR Code --}}
         <div class="mt-6 text-center">
             <div class="inline-block p-3 bg-gray-100 border rounded shadow-sm">
-                {!! QrCode::size(200)->generate($order->id . '|' . $order->seat_name . '|' . $order->total_harga) !!}
+                {!! QrCode::size(200)->generate($order->id . '|' . $order->seat_name . '|' . $order->ticket->seat_number . '|' . $quantity . '|' . $grandTotal) !!}
             </div>
         </div>
 
@@ -73,5 +86,6 @@
         </div>
     </div>
 </body>
+
 
 </html>

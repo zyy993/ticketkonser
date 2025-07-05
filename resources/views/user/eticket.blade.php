@@ -30,101 +30,113 @@
             <button id="sidebarToggle" class="text-white text-xl hidden sm:block focus:outline-none">
                 <i class="fas fa-chevron-down"></i>
             </button>
-            <!-- Sidebar -->
-            <div id="sidebar"
-                class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                    <div class="ml-4">
-                        <span class="font-semibold text-white text-lg">USERNAME</span>
-                        <br>
-                        <span class="text-white text-sm">user@example.com</span>
-                    </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
+             <!-- Sidebar -->
+        <div id="sidebar" class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+            <div class="flex items-center justify-start px-4 py-3 border-b">
+                 <a href="{{ route('user.editprofile') }}">
+               <img
+  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+  alt="User avatar"
+  class="w-10 h-10 rounded-full object-cover bg-white"
+/>
+                </a>
+                <div class="ml-4">
+                    <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
+                    <br>
+                    <span class="text-white text-sm">{{ Auth::user()->email }}</span>
                 </div>
+                <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
 
-                <ul class="p-4 space-y-4 text-white ml-4">
-                    <li><a href="#" class="hover:underline">My Tickets</a></li>
-                    <li><a href="#" class="hover:underline">Shopping Basket</a></li>
-                    <li><a href="#" class="hover:underline">Transaction History</a></li>
-                    <li><a href="#" class="hover:underline">Reviews &amp; Ratings</a></li>
-                    <li><a href="#" class="hover:underline">FAQ</a></li>
+            <ul class="p-4 space-y-4 text-white ml-4">
+              <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
+                    <li><a href="{{ route('user.shoppingbasket') }}" class="hover:underline">Shopping Basket</a></li>
+                    <li><a href="{{ route('riwayat.indext') }}" class="hover:underline">Transaction History</a></li>
+
+                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Reviews &amp; Ratings</a></li>
+                    <li><a href="{{ route('user.faq1') }}" class="hover:underline">FAQ</a></li>
                     <li>
                     </li>
                     <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
-                </ul>
+                    <div class="flex items-center">
+                        <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
+                            <!-- Optional Admin/Promotor Toggle -->
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+    @csrf
+</form>
+
+</nav>
+
+<!-- Popup for Logout Confirmation -->
+<div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
+            <div class="flex justify-center space-x-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
+                <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
             </div>
         </div>
-    </nav>
-            <!--popup-->
-            <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-                    <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
-                    <div class="flex justify-center space-x-4">
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
-                        <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-    <script>
-        // JavaScript to toggle the visibility of Admin and Promotor options
-        document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
-            const adminPromotorList = document.getElementById('adminPromotorList');
-            adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
+    </div>
+</div>
+
+<script>
+    // JavaScript to toggle the visibility of Admin and Promotor options
+    document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const close = document.getElementById('closeSidebar');
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutConfirmation = document.getElementById('logoutConfirmation');
+        const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation.querySelector('.bg-gray-400');
+
+        toggle.addEventListener('click', () => {
+            sidebar.classList.remove('translate-x-full');
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.getElementById('sidebarToggle');
-            const close = document.getElementById('closeSidebar');
-            const logoutButton = document.getElementById('logoutButton');
-            const logoutConfirmation = document.getElementById('logoutConfirmation');
-            const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
-            const noButton = logoutConfirmation.querySelector('.bg-gray-400');
+        close.addEventListener('click', () => {
+            sidebar.classList.add('translate-x-full');
+        });
 
-            toggle.addEventListener('click', () => {
-                sidebar.classList.remove('translate-x-full');
-            });
+        // Show logout confirmation popup
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default action
+            logoutConfirmation.classList.remove('hidden'); // Show popup
+        });
 
-            close.addEventListener('click', () => {
+        // Handle YES button click
+        yesButton.addEventListener('click', () => {
+    document.getElementById('logoutForm').submit();
+});
+
+        // Handle NO button click
+        noButton.addEventListener('click', () => {
+            logoutConfirmation.classList.add('hidden'); // Hide popup
+        });
+
+        // Optional: close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
                 sidebar.classList.add('translate-x-full');
-            });
-
-            // Show logout confirmation popup
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default action
-                logoutConfirmation.classList.remove('hidden'); // Show popup
-            });
-
-            // Handle YES button click
-            yesButton.addEventListener('click', () => {
-                // Implement logout logic here
-                // For example, redirect to logout URL
-                window.location.href = '/logout'; // Change this to your logout URL
-            });
-
-            // Handle NO button click
-            noButton.addEventListener('click', () => {
-                logoutConfirmation.classList.add('hidden'); // Hide popup
-            });
-
-            // Optional: close sidebar when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-                    sidebar.classList.add('translate-x-full');
-                }
-            });
+            }
         });
-    </script>
+    });
+</script>
     </nav>
 <main class="max-w-4xl mx-auto p-4">
   <div class="bg-white border border-[#0B1460] rounded-md shadow-md p-6 mb-6 select-none" style="font-family: Arial, sans-serif">
@@ -150,10 +162,11 @@
         <dd>: {{ $order->seat_name }},{{ $order->ticket->seat_number ?? '-' }}</dd>
 
         <dt class="font-semibold">Price</dt>
-        <dd>: IDR {{ number_format($order->total_harga, 0, ',', '.') }}</dd>
+<dd>: IDR {{ number_format($order->total_harga * ($order->quantity ?? 1), 0, ',', '.') }}</dd>
+
 
         <dt class="font-semibold">Number of Ticket(s)</dt>
-        <dd>: 1</dd>
+        <dd>: {{ $order->quantity ?? 1 }}</dd>
 
         <dt class="font-semibold">Event Date</dt>
         <dd>: {{ \Carbon\Carbon::parse($order->ticket->event->date)->translatedFormat('F d, Y') }}</dd>
@@ -216,17 +229,20 @@
     </div>
     <div class="w-full sm:w-auto flex flex-col text-xs font-semibold text-black border border-gray-300 rounded-lg overflow-hidden shadow-md" style="min-width: 220px;">
       <div class="flex justify-between px-5 py-2 border-b border-gray-300 bg-white" style="height: 36px;">
-        <span class="text-gray-700">Ticket</span>
-        <span class="text-gray-700">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-      </div>
-      <div class="flex justify-between px-5 py-2 border-b border-gray-300 bg-white" style="height: 36px;">
-        <span class="text-gray-700">TAX</span>
-        <span class="text-gray-700">Rp {{ number_format($tax, 0, ',', '.') }}</span>
-      </div>
-      <div class="flex justify-between px-5 py-2 bg-white font-bold text-black rounded-b-lg" style="height: 36px;">
-        <span>Complete</span>
-        <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
-      </div>
+  <span class="text-gray-700">Ticket</span>
+  <span class="text-gray-700">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+</div>
+
+<div class="flex justify-between px-5 py-2 border-b border-gray-300 bg-white" style="height: 36px;">
+  <span class="text-gray-700">TAX</span>
+  <span class="text-gray-700">Rp {{ number_format($tax, 0, ',', '.') }}</span>
+</div>
+
+<div class="flex justify-between px-5 py-2 bg-white font-bold text-black rounded-b-lg" style="height: 36px;">
+  <span>Complete</span>
+  <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+</div>
+
     </div>
   </section>
 

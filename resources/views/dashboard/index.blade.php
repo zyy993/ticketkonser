@@ -7,26 +7,29 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 24px;
-            background-color: #f9fafb;
-            color: #333;
+            background-color: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .back-wrapper {
+            margin-bottom: 30px;
         }
 
         .back-button {
-            position: fixed;
-            top: 24px;
-            left: 24px;
-            background-color: #4a6b8a;
-            color: white;
-            padding: 8px 16px;
-            text-decoration: none;
-            border-radius: 6px;
+            display: inline-block;
+            background: linear-gradient(to right, #0B1460, #4F8EF7);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 9999px;
             font-size: 0.9rem;
             font-weight: 600;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
         }
 
         .back-button:hover {
-            background-color: #3a5570;
+            background: linear-gradient(to right, #09124d, #3a75dd);
         }
 
         .topbar {
@@ -34,17 +37,18 @@
         }
 
         .topbar a {
-            font-weight: bold;
-            font-size: 1rem;
-            color: #2563eb;
-            text-decoration: none;
-            background-color: #e0ecff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0B1460;
+            background-color: #e8f0fe;
             padding: 8px 14px;
-            border-radius: 6px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
         }
 
         .topbar a:hover {
-            background-color: #c7dcff;
+            background-color: #d0e3fd;
         }
 
         .success {
@@ -53,24 +57,25 @@
             color: #166534;
             padding: 12px;
             margin-bottom: 20px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 500;
         }
 
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin: 60px 0 20px;
-            border-left: 4px solid #4a6b8a;
+            margin: 40px 0 20px;
+            border-left: 4px solid #0B1460;
             padding-left: 10px;
-            color: #1f2937;
+            color: #1e293b;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 8px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             overflow: hidden;
             margin-bottom: 40px;
         }
@@ -82,14 +87,13 @@
         }
 
         th {
-            background-color: #4a6b8a;
+            background-color: #0B1460;
             color: white;
             font-size: 0.85rem;
-            letter-spacing: 0.5px;
         }
 
         tr:nth-child(even) {
-            background-color: #f3f4f6;
+            background-color: #f9fafb;
         }
 
         img {
@@ -97,7 +101,6 @@
             height: 45px;
             object-fit: cover;
             border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .delete {
@@ -107,7 +110,7 @@
             font-size: 0.8rem;
             font-weight: 500;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
@@ -126,9 +129,9 @@
         .moment-card {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
-            padding: 14px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             text-align: center;
             width: 160px;
         }
@@ -141,20 +144,6 @@
             margin-bottom: 8px;
         }
 
-        /* Modal */
-        .hidden {
-            display: none !important;
-        }
-
-        @keyframes fade-in {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .animate-fade-in {
-            animation: fade-in 0.3s ease-out;
-        }
-
         #deleteModal {
             position: fixed;
             inset: 0;
@@ -165,8 +154,9 @@
             z-index: 999;
         }
 
-        #deleteModal .modal-box {
+        .modal-box {
             background: white;
+            width: 90%;
             max-width: 400px;
             padding: 24px;
             border-radius: 12px;
@@ -222,29 +212,19 @@
     </style>
 </head>
 <body>
-    <a href="{{ route('dashboard.promotor') }}" class="back-button">← Kembali</a>
+    <div class="back-wrapper">
+        <a href="{{ route('dashboard.promotor') }}" class="back-button"><- Kembali ke Dashboard Promotor</a>
+    </div>
 
     @if(session('success'))
         <div class="success">{{ session('success') }}</div>
     @endif
 
     <h1>Dashboard - Manage Events</h1>
-    @include('dashboard._table', [
-        'title' => 'Event',
-        'data' => $events,
-        'createRoute' => route('dashboard.create'),
-        'editRoute' => 'dashboard.edit',
-        'deleteRoute' => 'dashboard.destroy'
-    ])
+    @include('dashboard._table', [ 'title' => 'Event', 'data' => $events, 'createRoute' => route('dashboard.create'), 'editRoute' => 'dashboard.edit', 'deleteRoute' => 'dashboard.destroy' ])
 
     <h1>Dashboard - Manage Horizon</h1>
-    @include('dashboard._table', [
-        'title' => 'Horizon',
-        'data' => $horizons,
-        'createRoute' => route('horizon.create'),
-        'editRoute' => 'horizon.edit',
-        'deleteRoute' => 'horizon.destroy'
-    ])
+    @include('dashboard._table', [ 'title' => 'Horizon', 'data' => $horizons, 'createRoute' => route('horizon.create'), 'editRoute' => 'horizon.edit', 'deleteRoute' => 'horizon.destroy' ])
 
     <h1>Dashboard - Manage Moment</h1>
     <div class="topbar">
@@ -270,16 +250,13 @@
         @endforelse
     </div>
 
-    <!-- Modal -->
     <div id="deleteModal">
         <div class="modal-box animate-fade-in">
             <h2>Konfirmasi Penghapusan</h2>
             <p>Apakah Anda yakin ingin menghapus data ini?</p>
             <div class="modal-actions">
                 <button type="button" class="btn btn-cancel" onclick="closeDeleteModal()">Batal</button>
-                <button type="button" class="btn btn-delete" onclick="submitDeleteForm()">
-                    <i class="fas fa-trash-alt"></i> Hapus
-                </button>
+                <button type="button" class="btn btn-delete" onclick="submitDeleteForm()">Hapus</button>
             </div>
         </div>
     </div>

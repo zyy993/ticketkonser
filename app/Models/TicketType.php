@@ -14,6 +14,7 @@ class TicketType extends Model
     'jenis_tiket',
     'zone', // ✅ tambah ini
     'harga',
+     'quantity',
     'seat_number',
     'status',
 ];
@@ -24,5 +25,5 @@ class TicketType extends Model
         return $this->belongsTo(Home::class, 'home_id');
     }
 
-    
+
 }
