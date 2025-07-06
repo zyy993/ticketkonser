@@ -56,6 +56,7 @@
 
 
                 <ul class="p-4 space-y-4 text-white ml-4">
+                    <li><a href="{{ route('admin.dashboard') }}" class="hover:underline">Home</a></li>
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 

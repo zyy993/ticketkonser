@@ -309,9 +309,10 @@
         <span>{{ $horizon->lokasi }}</span>
       </div>
       <a href="{{ route('info2', ['event_id' => $horizon->id]) }}">
-        <button class="bg-blue-600 text-white text-xs font-semibold rounded px-3 py-1" type="button">
-          More Info
-        </button>
+        <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition" type="button">
+  More Info
+</button>
+
       </a>
     </div>
   </div>

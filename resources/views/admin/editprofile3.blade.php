@@ -27,231 +27,211 @@
   </style>
  </head>
  <body class="bg-white text-black">
-    <!-- Navbar -->
-    <nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
-        <div class="flex items-center space-x-2 min-w-[840px]">
-            <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" height="32"
-                src="{{ asset('img/logo.png') }}" width="32" />
-            <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
-        </div>
-        <div class="hidden sm:flex flex-1 max-w-[480px] mx-6 mr-10"> <!-- Increased right margin here -->
-            <div class="relative w-full">
-                <input
-                    class="w-full rounded-full bg-[#00108b] placeholder-white text-white pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-                    placeholder="Search by artist or event" type="text" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white text-sm"></i>
-            </div>
-        </div>
-        <div class="flex items-center space-x-3 min-w-[180px] justify-end">
-            <button class="text-white text-xl sm:hidden">
-                <i class="fas fa-bars"></i>
-            </button>
-            <button id="sidebarToggle" class="text-white text-xl hidden sm:block focus:outline-none">
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <!-- Sidebar -->
-            <div id="sidebar"
-                class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
-                <div class="flex items-center justify-start px-4 py-3 border-b">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
-                        class="bi bi-person-circle text-white" viewBox="0 0 16 16">
-                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                        <path fill-rule="evenodd"
-                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                    </svg>
-                    <div class="ml-4">
-                         <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
-                        <br>
-                        <span class="text-white text-sm">{{ Auth::user()->email }}</span>
-                    </div>
-                    <button id="closeSidebar" class="text-white text-2xl focus:outline-none ml-auto">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <ul class="p-4 space-y-4 text-white ml-4">
-                   <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
-                    <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
+<!-- Navbar -->
+<nav class="bg-[#00108b] flex items-center justify-between px-6 py-3">
+    <div class="flex items-center space-x-2 min-w-[840px]">
+        <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" src="{{ asset('img/logo.png') }}" />
+        <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
+    </div>
+    <div class="flex items-center space-x-3 min-w-[180px] justify-end">
+        <button class="text-white text-xl sm:hidden">
+            <i class="fas fa-bars"></i>
+        </button>
+        <button id="sidebarToggle" class="text-white text-xl hidden sm:block focus:outline-none">
+            <i class="fas fa-chevron-down"></i>
+        </button>
 
-                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Review & Ratings</a></li>
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+<div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
+  <a href="{{ route('admin.editprofile3') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
 
-                    <li><a href="{{ route('admin.livechat') }}" class="hover:underline">Live Chat</a></li>
-                   <li><a href="{{ route('faq.manage') }}" class="hover:underline">FAQ</a></li>
-                        <div class="flex items-center">
-                            <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none"></button>
-                        </div>
+  <div class="flex-1 min-w-0">
+    <span class="font-semibold text-white text-lg block truncate">{{ Auth::user()->name }}</span>
+    <span class="text-white text-sm block truncate">{{ Auth::user()->email }}</span>
+  </div>
+
+  <button id="closeSidebar" class="text-white text-2xl focus:outline-none">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
+
+            <ul class="p-4 space-y-4 text-white ml-4">
+              <li><a href="{{ route('home.tampil') }}" class="hover:underline">Home</a></li>
+                    <li><a href="{{ route('user.shoppingbasket') }}" class="hover:underline">Shopping Basket</a></li>
+                    <li><a href="{{ route('riwayat.indext') }}" class="hover:underline">Transaction History</a></li>
+
+                    <li><a href="{{ route('user.review1') }}" class="hover:underline">Reviews &amp; Ratings</a></li>
+                    <li><a href="{{ route('user.faq1') }}" class="hover:underline">FAQ</a></li>
+                    <li>
                     </li>
                     <li><a href="#" id="logoutButton" class="hover:underline">Logout</a></li>
-                </ul>
-            </div>
+                    <div class="flex items-center">
+                        <button id="toggleAdminPromotor" class="ml-2 text-white focus:outline-none">
+                            <!-- Optional Admin/Promotor Toggle -->
+                        </button>
+                    </div>
+                </li>
+            </ul>
         </div>
-            <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
+
+    </div>
+    <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="hidden">
     @csrf
 </form>
-    </nav>
-            <!--popup-->
-            <div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white rounded-lg shadow-lg p-6 text-center">
-                    <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
-                    <div class="flex justify-center space-x-4">
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
-                        <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
-                    </div>
-                </div>
+
+</nav>
+
+<!-- Popup for Logout Confirmation -->
+<div id="logoutConfirmation" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden" style="z-index: 100;">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 class="text-2xl font-bold mb-4">Are you sure you want to exit?</h2>
+            <div class="flex justify-center space-x-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">YES</button>
+                <button class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">NO</button>
             </div>
-            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    // JavaScript to toggle the visibility of Admin and Promotor options
+    document.getElementById('toggleAdminPromotor').addEventListener('click', function() {
+        const adminPromotorList = document.getElementById('adminPromotorList');
+        adminPromotorList.classList.toggle('hidden'); // Toggle the 'hidden' class
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
         const sidebar = document.getElementById('sidebar');
         const toggle = document.getElementById('sidebarToggle');
         const close = document.getElementById('closeSidebar');
         const logoutButton = document.getElementById('logoutButton');
         const logoutConfirmation = document.getElementById('logoutConfirmation');
-        const logoutForm = document.getElementById('logoutForm');
-        const yesButton = logoutConfirmation?.querySelector('.bg-blue-500');
-        const noButton = logoutConfirmation?.querySelector('.bg-gray-400');
+        const yesButton = logoutConfirmation.querySelector('.bg-blue-500');
+        const noButton = logoutConfirmation.querySelector('.bg-gray-400');
 
-        // Sidebar toggle
-        if (toggle && sidebar) {
-            toggle.addEventListener('click', () => {
-                sidebar.classList.remove('translate-x-full');
-            });
-        }
+        toggle.addEventListener('click', () => {
+            sidebar.classList.remove('translate-x-full');
+        });
 
-        if (close && sidebar) {
-            close.addEventListener('click', () => {
-                sidebar.classList.add('translate-x-full');
-            });
-        }
+        close.addEventListener('click', () => {
+            sidebar.classList.add('translate-x-full');
+        });
 
         // Show logout confirmation popup
-        if (logoutButton && logoutConfirmation) {
-            logoutButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                logoutConfirmation.classList.remove('hidden');
-            });
-        }
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent default action
+            logoutConfirmation.classList.remove('hidden'); // Show popup
+        });
 
-        // YES = Submit logout form
-        if (yesButton && logoutForm) {
-            yesButton.addEventListener('click', function () {
-                logoutForm.submit();
-            });
-        }
+        // Handle YES button click
+        yesButton.addEventListener('click', () => {
+    document.getElementById('logoutForm').submit();
+});
 
-        // NO = Close popup
-        if (noButton && logoutConfirmation) {
-            noButton.addEventListener('click', function () {
-                logoutConfirmation.classList.add('hidden');
-            });
-        }
+        // Handle NO button click
+        noButton.addEventListener('click', () => {
+            logoutConfirmation.classList.add('hidden'); // Hide popup
+        });
 
-        // Close sidebar if click outside
-        document.addEventListener('click', function (e) {
+        // Optional: close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
             if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
                 sidebar.classList.add('translate-x-full');
             }
         });
-
-        // Optional toggle admin/promotor (jika ada)
-        const toggleAdminPromotor = document.getElementById('toggleAdminPromotor');
-        const adminPromotorList = document.getElementById('adminPromotorList');
-        if (toggleAdminPromotor && adminPromotorList) {
-            toggleAdminPromotor.addEventListener('click', function () {
-                adminPromotorList.classList.toggle('hidden');
-            });
-        }
     });
 </script>
-
-    </nav>
   <!-- Main content -->
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 py-8">
-   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-    <h1 class="text-black font-bold text-xl select-none">
-     Edit Profile
-    </h1>
-    <img alt="User avatar circle with blue background and user silhouette" class="w-20 h-20 rounded-full mt-4 sm:mt-0" height="80" src="{{ asset('img/kosong.png') }}" width="80"/>
-   </div>
-   <form class="space-y-6 max-w-3xl">
+<form method="POST" action="{{ route('profile.update3') }}" enctype="multipart/form-data"
+      class="space-y-6 max-w-3xl mx-auto bg-white shadow-md p-6 rounded-lg">
+    @csrf
+
+    {{-- Preview Foto --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="username">
-      Username
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="username" type="text"/>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Profile Picture</label>
+        <input
+            type="file"
+            name="foto"
+            accept="image/*"
+            class="block w-full text-sm text-gray-700
+                   file:mr-4 file:py-2 file:px-4
+                   file:rounded-md file:border-0
+                   file:text-sm file:font-semibold
+                   file:bg-blue-50 file:text-blue-700
+                   hover:file:bg-blue-100 border border-gray-300 rounded-md
+                   focus:outline-none focus:ring-2 focus:ring-[#0B1E8A] shadow-sm">
     </div>
+
+    {{-- Username --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="email">
-      Email
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="email" type="email"/>
+        <label class="block text-sm font-semibold text-gray-700 mb-2" for="name">Username</label>
+        <input
+            name="name"
+            value="{{ Auth::user()->name }}"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm
+                   focus:ring-2 focus:ring-[#0B1E8A] focus:outline-none shadow-sm" />
     </div>
+
+    {{-- Email --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="address">
-      Address
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="address" type="text"/>
+        <label class="block text-sm font-semibold text-gray-700 mb-2" for="email">Email</label>
+        <input
+            name="email"
+            value="{{ Auth::user()->email }}"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm
+                   focus:ring-2 focus:ring-[#0B1E8A] focus:outline-none shadow-sm" />
     </div>
+
+    {{-- No HP --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="contact">
-      Contact Number
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="contact" type="tel"/>
+        <label class="block text-sm font-semibold text-gray-700 mb-2" for="no_hp">Contact Number</label>
+        <input
+            name="no_hp"
+            value="{{ Auth::user()->no_hp }}"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm
+                   focus:ring-2 focus:ring-[#0B1E8A] focus:outline-none shadow-sm" />
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-     <div>
-      <label class="block text-xs font-semibold mb-1 select-none" for="city">
-       City
-      </label>
-      <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="city">
-       <option disabled="" selected="" value="">
-       </option>
-       <option>
-        Yogyakarta
-       </option>
-       <option>
-        Jakarta
-       </option>
-       <option>
-        Bandung
-       </option>
-      </select>
-     </div>
-     <div>
-      <label class="block text-xs font-semibold mb-1 select-none" for="state">
-       State
-      </label>
-      <select class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="state">
-       <option disabled="" selected="" value="">
-       </option>
-       <option>
-        Special Region of Yogyakarta
-       </option>
-       <option>
-        DKI Jakarta
-       </option>
-       <option>
-        West Java
-       </option>
-      </select>
-     </div>
-    </div>
+
+    {{-- Password --}}
     <div>
-     <label class="block text-xs font-semibold mb-1 select-none" for="password">
-      Password
-     </label>
-     <input class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B1E8A]" id="password" type="password"/>
+        <label class="block text-sm font-semibold text-gray-700 mb-2" for="password">Password (optional)</label>
+        <input
+            name="password"
+            type="password"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm
+                   focus:ring-2 focus:ring-[#0B1E8A] focus:outline-none shadow-sm" />
     </div>
-    <div class="flex space-x-4">
-     <button class="bg-[#6B89B1] text-white text-sm font-semibold rounded-md px-6 py-2" type="button">
-      Cancel
-     </button>
-     <button class="bg-[#6B89B1] text-white text-sm font-semibold rounded-md px-6 py-2" type="submit">
-      Save
-     </button>
+
+    {{-- Tombol --}}
+    <div class="flex justify-between">
+        <a href="{{ route('admin.dashboard') }}"
+           class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-md px-6 py-2 transition duration-200">
+           Cancel
+        </a>
+
+        <button
+            type="submit"
+            class="bg-[#6B89B1] hover:bg-[#5a7495] text-white font-medium rounded-md px-6 py-2
+                   transition duration-200 shadow-md">
+
+            Save
+
+        </button>
+
     </div>
-   </form>
-  </main>
+</form>
+
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
     <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs leading-relaxed">

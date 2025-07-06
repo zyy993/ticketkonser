@@ -34,13 +34,15 @@
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
                 <div class="flex items-center justify-start px-4 py-3 border-b">
-                     <a href="{{ route('user.editprofile') }}">
-               <img
-  src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
-  alt="User avatar"
-  class="w-10 h-10 rounded-full object-cover bg-white"
-/>
-                </a>
+                    <a href="{{ route('admin.editprofile3') }}">
+    <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
+      <img
+        src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
+        alt="User avatar"
+        class="w-full h-full object-cover"
+      />
+    </div>
+  </a>
                     <div class="ml-4">
                          <span class="font-semibold text-white text-lg">{{ Auth::user()->name }}</span>
     <br>

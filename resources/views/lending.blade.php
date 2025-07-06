@@ -28,7 +28,7 @@
         <span class="text-white font-semibold text-lg select-none">TixMeUp</span>
     </div>
            <!-- FORM -->
-        <form action="{{ route('search.artist') }}" method="GET" class="relative flex items-center max-w-[400px] w-full">
+        <form class="relative flex items-center max-w-[400px] w-full">
             <input
             type="text"
             name="q"
@@ -146,9 +146,9 @@
                 <i class="fas fa-map-marker-alt ml-3"></i>
                 <span>{{ $content->location }}</span>
             </div>
-           <a href="{{ route('info3', ['event_id' => $content->id]) }}">
+
   <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition">More info</button>
-</a>
+
 
         </div>
     </div>
@@ -183,11 +183,12 @@
         <i class="fas fa-map-marker-alt ml-3"></i>
         <span>{{ $horizon->lokasi }}</span>
       </div>
-      <a href="{{ route('info2', ['event_id' => $horizon->id]) }}">
-        <button class="bg-blue-600 text-white text-xs font-semibold rounded px-3 py-1" type="button">
-          More Info
-        </button>
-      </a>
+
+        <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition" type="button">
+  More Info
+</button>
+
+
     </div>
   </div>
 @empty
@@ -218,10 +219,7 @@
       </div>
    </div>
    <!-- Live Chat Bubble (Link to Live Chat Page) -->
-<a href="{{ route('livechat') }}"
-   class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg">
-    <i class="fas fa-comment-dots text-xl"></i>
-</a>
+
 </section>
   <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">

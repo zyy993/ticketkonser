@@ -45,6 +45,11 @@ class AuthController extends Controller
         return view('signin');
     }
 
+    public function tampiladmin1()
+    {
+        return view('admin.haladmin');
+    }
+
     // Proses login
     public function submitLogin(Request $request)
     {
@@ -122,5 +127,44 @@ public function destroy(Request $request): RedirectResponse
 
     return redirect('/'); // arahkan ke halaman utama
 }
+public function editProfile()
+    {
+        return view('admin.editprofile3');
+    }
+
+public function updateProfile3(Request $request)
+{
+     /** @var \App\Models\User $user */
+$user = Auth::user();
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'no_hp' => 'nullable|string|max:20',
+        'password' => 'nullable|min:6',
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->no_hp = $request->no_hp;
+
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->password);
+    }
+
+    // ⬇️ Simpan gambar jika ada
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('foto', $filename, 'public');
+        $user->foto = $path;
+    }
+
+    $user->save();
+
+    return redirect('/admin/dashboard')->with('success', 'Profile updated successfully!');
+}
+
 
 }

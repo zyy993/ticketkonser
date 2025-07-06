@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FaqController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpMail;
+use App\Http\Controllers\AdminController;
 
 use App\Models\Chat;
 use App\Models\Horizon;
@@ -191,6 +192,8 @@ Route::get('/editprofile', function () {
 
 
 Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+Route::post('/profile/update3', [AuthController::class, 'updateProfile3'])->name('profile.update3');
+Route::get('/admin/dashboard', [AuthController::class, 'tampiladmin1'])->name('admin.haladmin');
 
 Route::get('/contoh', function () {
     return view('contoh');
@@ -199,9 +202,7 @@ Route::get('livechat1', function () {
     return view('promotor.livechat1');
 });
 
-Route::get('haladmin', function () {
-    return view('admin.haladmin');
-});
+
 Route::get('editprofile1', function () {
     return view('promotor.editprofile1');
 });
@@ -349,4 +350,5 @@ Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('revi
 
 Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 Route::get('/search/artist', [HomeController::class, 'searchArtist'])->name('search.artist');
+Route::get('/admin/editprofile3', [AuthController::class, 'editProfile'])->name('admin.editprofile3');
 

@@ -35,7 +35,7 @@
             <div id="sidebar"
                 class="fixed bg-[#00108b] top-0 right-0 h-full w-64 shadow-lg z-50 transform translate-x-full transition-transform duration-300">
 <div class="flex items-center justify-between px-4 py-3 border-b gap-x-4">
-  <a href="{{ route('user.editprofile') }}">
+  <a href="{{ route('admin.editprofile3') }}">
     <div class="w-10 h-10 rounded-full overflow-hidden bg-white">
       <img
         src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('img/kosong.png') }}"
@@ -57,6 +57,7 @@
 
 
                 <ul class="p-4 space-y-4 text-white ml-4">
+                    <li><a href="{{ route('admin.dashboard') }}" class="hover:underline">Home</a></li>
                      <li><a href="{{ route('admin.payment.confirmation') }}" class="hover:underline">Payment Confirmation</a></li>
                     <li><a href="{{ route('riwayat.index') }}" class="hover:underline">Recap Of User Transaction</a></li>
 
