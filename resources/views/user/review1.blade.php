@@ -318,31 +318,59 @@
 
     </p>
 
-    {{-- Tombol Like & Dislike --}}
-    <div class="flex space-x-4 mt-3">
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-up"></i>
-        <span>{{ $review->likes }}</span>
-      </button>
-      <button class="flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
-        <i class="far fa-thumbs-down"></i>
-        <span>{{ $review->dislikes }}</span>
-      </button>
-    </div>
+<!-- Tombol Like & Dislike -->
+<div class="flex space-x-4 mt-3">
+  <button class="like-btn flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
+    <i class="far fa-thumbs-up"></i>
+    <span class="like-count" data-count="{{ $review->likes ?? 0 }}">{{ $review->likes ?? 0 }}</span>
+  </button>
+  <button class="dislike-btn flex items-center space-x-1 text-gray-700 border border-gray-300 rounded px-3 py-1 text-xs select-none" type="button">
+    <i class="far fa-thumbs-down"></i>
+    <span class="dislike-count" data-count="{{ $review->dislikes ?? 0 }}">{{ $review->dislikes ?? 0 }}</span>
+  </button>
+</div>
   </div>
 </article>
 @endforeach
-    <!-- Review 3 -->
+
+
+
+<script>
+  document.querySelectorAll('.like-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
+      const countSpan = this.querySelector('.like-count');
+      let count = parseInt(countSpan.getAttribute('data-count')) || 0;
+
+      console.log("Like sebelum klik:", count);
+
+      count++;
+      countSpan.setAttribute('data-count', count);
+      countSpan.textContent = count;
+
+      this.disabled = true;
+      this.setAttribute('disabled', 'true');
+      this.classList.add('opacity-50', 'cursor-not-allowed');
+    });
+  });
+
+  document.querySelectorAll('.dislike-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
+      const countSpan = this.querySelector('.dislike-count');
+      let count = parseInt(countSpan.getAttribute('data-count')) || 0;
+
+      console.log("Dislike sebelum klik:", count);
+
+      count++;
+      countSpan.setAttribute('data-count', count);
+      countSpan.textContent = count;
+
+      this.disabled = true;
+      this.setAttribute('disabled', 'true');
+      this.classList.add('opacity-50', 'cursor-not-allowed');
+    });
+  });
+</script>
    </section>
-      <div class="flex justify-end mt-8">
-    <button class="flex items-center space-x-2 text-xs text-gray-700 border border-gray-300 rounded px-4 py-2 select-none" type="button">
-     <span>
-      More complete
-     </span>
-     <i class="fas fa-chevron-right">
-     </i>
-    </button>
-   </div>
   </main>
 <!-- Footer -->
   <footer class="bg-[#0B1A8C] text-white px-6 py-8 select-none">
