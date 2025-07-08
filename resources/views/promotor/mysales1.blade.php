@@ -232,7 +232,7 @@
           Jumlah Penonton
         </text>
 
-        <!-- Example bars, replace with dynamic Laravel @foreach -->
+         @foreach
         @php
           $colors = ['#ff69b4', '#2563eb', '#7c3aed', '#f97316', '#22c55e', '#facc15'];
         @endphp

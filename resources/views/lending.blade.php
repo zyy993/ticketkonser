@@ -25,7 +25,8 @@
 <nav class="bg-[#00108b] flex items-center justify-between px-6 py-2 h-[57px]">
     <div class="flex items-center space-x-2 min-w-[840px]">
         <img alt="TixMeUp logo with hand gesture icon in white on blue background" class="w-8 h-8" src="{{ asset('img/logo.png') }}" />
-        <span class="text-white font-semibold text-lg select-none">TixMeUpAAAAAAAA</span>
+
+        <span class="text-white font-semibold text-lg select-none">TixMeUpbbbbbb</span>
     </div>
            <!-- FORM -->
         <form class="relative flex items-center max-w-[400px] w-full">
