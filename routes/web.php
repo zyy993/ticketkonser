@@ -1,4 +1,5 @@
 <?php
+// test deploy at 1-minute interval
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
