@@ -243,46 +243,36 @@
 </div>
 
   <main class="px-6 pb-8 max-w-[1200px] mx-auto">
-    <!-- THIS MONTH's SPOTLIGHT -->
-    <section class="mb-8" id="this-month">
+<!-- THIS MONTH's SPOTLIGHT -->
+<section class="mb-8" id="this-month">
+  <h2 class="text-3xl font-bold mb-4 select-none">THIS MONTH’s SPOTLIGHT</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-
-      <h2 class="text-3xl font-bold mb-4 select-none">THIS MONTH’s SPOTLIGHT</h2>
-      <div class="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
-
-@foreach ($contents as $content)
-    <div class="min-w-[370px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-">
+    @foreach ($contents as $content)
+      <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
         @if($content->image_path)
-            <img src="{{ asset('storage/' . $content->image_path) }}" alt="{{ $content->name }}" class="rounded-t-lg object-cover w-full h-[140px]" />
+          <img src="{{ asset('storage/' . $content->image_path) }}" alt="{{ $content->name }}" class="rounded-t-lg object-cover w-full h-[140px]" />
         @else
-            <img src="https://placehold.co/280x140?text=No+Image" alt="No Image" />
+          <img src="https://placehold.co/280x140?text=No+Image" alt="No Image" />
         @endif
         <div class="p-3">
-            <p class="text-xs font-semibold mb-1 select-none">{{ $content->name }}</p>
-            <div class="flex items-center text-xs text-gray-500 space-x-1 mb-2 select-none">
-                <i class="fas fa-calendar-alt"></i>
-                <span>{{ \Carbon\Carbon::parse($content->date)->format('H.i') }}</span>
-                <i class="fas fa-map-marker-alt ml-3"></i>
-                <span>{{ $content->location }}</span>
-            </div>
-           <a href="{{ route('info3', ['event_id' => $content->id]) }}">
-  <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition">More info</button>
-</a>
-
-        </div>
-    </div>
-@endforeach
-
-
-
-
-        <!-- Card 1 -->
-
-
+          <p class="text-xs font-semibold mb-1 select-none">{{ $content->name }}</p>
+          <div class="flex items-center text-xs text-gray-500 space-x-1 mb-2 select-none">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ \Carbon\Carbon::parse($content->date)->format('H.i') }}</span>
+            <i class="fas fa-map-marker-alt ml-3"></i>
+            <span>{{ $content->location }}</span>
           </div>
+          <a href="{{ route('info3', ['event_id' => $content->id]) }}">
+            <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition">More info</button>
+          </a>
         </div>
       </div>
-    </section>
+    @endforeach
+
+  </div>
+</section>
+
     <!-- ON THE HORIZON -->
  <section class="mb-8" id="upcoming">
 
