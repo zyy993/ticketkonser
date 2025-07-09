@@ -442,16 +442,5 @@
       </div>
     </div>
   </footer>
-  <script>
-    document.getElementById('makePaymentBtn').addEventListener('click', function() {
-      const bankSelect = document.getElementById('bankSelect');
-      const selectedBank = bankSelect.value;
-      if (!selectedBank) {
-        alert('Please select a bank before making payment.');
-        return;
-      }
-      alert(`You have selected ${selectedBank} bank for payment.`);
-    });
-  </script>
 </body>
 </html>
