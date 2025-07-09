@@ -273,44 +273,43 @@
   </div>
 </section>
 
-    <!-- ON THE HORIZON -->
- <section class="mb-8" id="upcoming">
+<!-- ON THE HORIZON -->
+<section class="mb-8" id="upcoming">
 
   <h2 class="text-3xl font-bold mb-4 select-none">ON THE HORIZON !!!</h2>
-  <div class="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
-    {{-- Debug --}}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-
-   @forelse ($horizons as $horizon)
-  <div class="min-w-[370px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-0">
-    <img
-      alt="{{ $horizon->title }}"
-      class="rounded-t-lg object-cover w-full h-[140px]"
-      height="140"
-      width="280"
-      src="{{ asset('storage/' . $horizon->image_path) }}"
-    />
-    <div class="p-3">
-      <p class="text-xs font-semibold mb-1 select-none">{{ $horizon->title }}</p>
-      <div class="flex items-center text-xs text-gray-500 space-x-1 mb-2 select-none">
-        <i class="fas fa-calendar-alt"></i>
-        <span>{{ $horizon->jam }}</span>
-        <i class="fas fa-map-marker-alt ml-3"></i>
-        <span>{{ $horizon->lokasi }}</span>
+    @forelse ($horizons as $horizon)
+      <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+        <img
+          alt="{{ $horizon->title }}"
+          class="rounded-t-lg object-cover w-full h-[140px]"
+          height="140"
+          width="280"
+          src="{{ asset('storage/' . $horizon->image_path) }}"
+        />
+        <div class="p-3">
+          <p class="text-xs font-semibold mb-1 select-none">{{ $horizon->title }}</p>
+          <div class="flex items-center text-xs text-gray-500 space-x-1 mb-2 select-none">
+            <i class="fas fa-calendar-alt"></i>
+            <span>{{ $horizon->jam }}</span>
+            <i class="fas fa-map-marker-alt ml-3"></i>
+            <span>{{ $horizon->lokasi }}</span>
+          </div>
+          <a href="{{ route('info2', ['event_id' => $horizon->id]) }}">
+            <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition" type="button">
+              More Info
+            </button>
+          </a>
+        </div>
       </div>
-      <a href="{{ route('info2', ['event_id' => $horizon->id]) }}">
-        <button class="bg-[#4a6b8a] text-white text-xs rounded px-3 py-1 hover:bg-[#3a5570] transition" type="button">
-  More Info
-</button>
+    @empty
+      <p class="text-sm text-gray-600">Tidak ada data horizon untuk saat ini.</p>
+    @endforelse
 
-      </a>
-    </div>
-  </div>
-@empty
-  <p class="text-sm text-gray-600">Tidak ada data horizon untuk saat ini.</p>
-@endforelse
   </div>
 </section>
+
 
   </main>
   <!-- Moments We Loved -->
