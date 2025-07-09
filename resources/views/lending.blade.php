@@ -130,7 +130,7 @@
 
 
       <h2 class="text-3xl font-bold mb-4 select-none">THIS MONTH’s SPOTLIGHT</h2>
-      <div class="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
 @foreach ($contents as $content)
     <div class="min-w-[370px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-">
@@ -163,7 +163,7 @@
  <section class="mb-8" id="upcoming">
 
   <h2 class="text-3xl font-bold mb-4 select-none">ON THE HORIZON !!!</h2>
-  <div class="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {{-- Debug --}}
 
 
