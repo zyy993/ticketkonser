@@ -224,7 +224,6 @@
         <option value="BSI">BSI</option>
         <option value="CIMB">CIMB</option>
         <option value="BNI">BNI</option>
-        <option value="QR">QR</option>
       </select>
     </div>
     <div class="w-full sm:w-auto flex flex-col text-xs font-semibold text-black border border-gray-300 rounded-lg overflow-hidden shadow-md" style="min-width: 220px;">
